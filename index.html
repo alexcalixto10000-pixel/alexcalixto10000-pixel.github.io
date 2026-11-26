@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Plantas - MySQL</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f1;
+            color: #2c3e50;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+        }
+        .formulario {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        button {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #1b5e20;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f8e9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Registro de Plantas</h1>
+
+    <div class="formulario">
+        <input type="text" id="nombre" placeholder="Nombre de la planta (ej. Monstera)">
+        <input type="text" id="valor" placeholder="Estado / Humedad (ej. Humedad 70%)">
+        <button onclick="enviarDatos()">Guardar</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Planta</th>
+                <th>Valor / Estado</th>
+                <th>Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-datos">
+            <!-- Aquí se insertan los datos desde MySQL -->
+        </tbody>
+    </table>
+
+    <script>
+        const API_URL = "http://127.0.0.1:5000";
+
+        // 1. Leer los datos de MySQL y mostrarlos en la tabla
+        function cargarDatos() {
+            fetch(`${API_URL}/datos`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById("tabla-datos");
+                    tbody.innerHTML = "";
+                    data.forEach(fila => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${fila.id}</td>
+                                <td>${fila.nombre}</td>
+                                <td>${fila.valor}</td>
+                                <td>${fila.fecha}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => console.error("Error al cargar datos:", err));
+        }
+
+        // 2. Enviar un nuevo registro hacia MySQL
+        function enviarDatos() {
+            const nombreInput = document.getElementById("nombre");
+            const valorInput = document.getElementById("valor");
+
+            if (!nombreInput.value || !valorInput.value) {
+                alert("Por favor llena ambos campos.");
+                return;
+            }
+
+            fetch(`${API_URL}/guardar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nombre: nombreInput.value,
+                    valor: valorInput.value
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                nombreInput.value = "";
+                valorInput.value = "";
+                cargarDatos(); // Actualiza la tabla al instante
+            })
+            .catch(err => console.error("Error al guardar:", err));
+        }
+
+        // Cargar registros automáticamente al abrir la página
+        cargarDatos();
+    </script>
+
+</body>
+</html>
