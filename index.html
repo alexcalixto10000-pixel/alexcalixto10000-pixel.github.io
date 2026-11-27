@@ -3,150 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor de Plantas - MySQL</title>
+    <title>Sistema de Riego Automático</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #14532d;
+            --primary-light: #dcfce7;
+            --accent: #0284c7;
+            --accent-light: #e0f2fe;
+            --bg: #f3f7f4;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f1;
-            color: #2c3e50;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #ecfdf5 0%, #f1f5f9 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 30px 16px;
         }
-        h1 {
-            color: #2e7d32;
-            text-align: center;
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
         }
-        .formulario {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, #14532d 0%, #166534 60%, #15803d 100%);
+            color: white;
+            padding: 28px 32px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(20, 83, 45, 0.18);
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
         }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title p {
+            color: #bbf7d0;
+            font-size: 0.92rem;
+            margin-top: 4px;
+        }
+
+        .status-pill {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4ade80;
+            box-shadow: 0 0 8px #4ade80;
+        }
+
+        .dot.offline {
+            background-color: #f87171;
+            box-shadow: 0 0 8px #f87171;
+        }
+
+        /* Tarjetas de Resumen */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .stat-card span {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card h2 {
+            font-size: 1.45rem;
+            color: var(--text);
+            margin-top: 6px;
+        }
+
+        /* Formulario de Registro Manual */
+        .form-card {
+            background: var(--card);
+            padding: 22px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+
+        .form-card h3 {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            color: var(--primary-dark);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
         input {
             flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         button {
-            background-color: #2e7d32;
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
         }
+
         button:hover {
-            background-color: #1b5e20;
+            background-color: var(--primary-dark);
         }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.btn-refresh {
+            background-color: var(--accent-light);
+            color: var(--accent);
+        }
+
+        button.btn-refresh:hover {
+            background-color: #bae6fd;
+        }
+
+        /* Tabla de Registros */
+        .table-card {
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h3 {
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+
+        thead {
+            background-color: #f8fafc;
         }
+
         th {
-            background-color: #2e7d32;
-            color: white;
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid var(--border);
         }
-        tr:hover {
-            background-color: #f1f8e9;
+
+        td {
+            padding: 15px 20px;
+            font-size: 0.93rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background-color: #f0fdf4;
+        }
+
+        .badge-id {
+            background: #f1f5f9;
+            color: var(--muted);
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+        }
+
+        .plant-name {
+            font-weight: 600;
+            color: var(--text);
+            text-transform: capitalize;
+        }
+
+        .badge-humedad {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .fecha-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fecha-dia {
+            font-weight: 600;
+            color: var(--text);
+            text-transform: capitalize;
+        }
+
+        .fecha-hora {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .empty-msg {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
         }
     </style>
 </head>
 <body>
 
-    <h1>Registro de Plantas</h1>
-    <h1>Registro de Riegos</h1>
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>🌱 Monitor de Riego Automático</h1>
+            <p>Historial en tiempo real de ciclos de riego y humedad del sustrato</p>
+        </div>
+        <div class="status-pill">
+            <div class="dot" id="status-dot"></div>
+            <span id="status-text">Conectando a la nube...</span>
+        </div>
+    </header>
 
-    <div class="formulario">
-        <input type="text" id="nombre" placeholder="Nombre de la planta (ej. Monstera)">
-        <input type="text" id="valor" placeholder="Estado / Humedad (ej. Humedad 70%)">
-        <button onclick="enviarDatos()">Guardar</button>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span>Total de Riegos</span>
+            <h2 id="stat-total">--</h2>
+        </div>
+        <div class="stat-card">
+            <span>Última Planta Regada</span>
+            <h2 id="stat-ultima" style="text-transform: capitalize;">--</h2>
+        </div>
+        <div class="stat-card">
+            <span>Último Registro</span>
+            <h2 id="stat-hora" style="font-size: 1.15rem;">--</h2>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Planta</th>
-                <th>Valor / Estado</th>
-                <th>Fecha de Registro</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-datos">
-            <!-- Aquí se insertan los datos desde MySQL -->
-        </tbody>
-    </table>
+    <div class="form-card">
+        <h3>Registrar riego o lectura manual</h3>
+        <div class="form-row">
+            <input type="text" id="nombre" placeholder="Nombre de la planta (ej. Suculenta, Monstera)">
+            <input type="text" id="valor" placeholder="Humedad o estado (ej. Humedad 85%)">
+            <button onclick="enviarDatos()">Registrar Riego</button>
+            <button class="btn-refresh" onclick="cargarDatos()">↻ Actualizar</button>
+        </div>
+    </div>
 
-    <script>
-        const API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com/";
+    <div class="table-card">
+        <div class="table-header">
+            <h3>Bitácora de Riegos</h3>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th># ID</th>
+                        <th>Planta / Zona</th>
+                        <th>Lectura / Estado</th>
+                        <th>Fecha y Hora de Riego</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-datos">
+                    <tr><td colspan="4" class="empty-msg">Cargando historial desde Aiven...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-        // 1. Leer los datos de MySQL y mostrarlos en la tabla
-        function cargarDatos() {
-            fetch(`${API_URL}/datos`)
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById("tabla-datos");
-                    tbody.innerHTML = "";
-                    data.forEach(fila => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${fila.id}</td>
-                                <td>${fila.nombre}</td>
-                                <td>${fila.valor}</td>
-                                <td>${fila.fecha}</td>
-                            </tr>
-                        `;
-                    });
-                })
-                .catch(err => console.error("Error al cargar datos:", err));
+<script>
+    // ⚠️ PEGA AQUÍ TU URL EXACTA DE RENDER (sin diagonal al final)
+    const API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com/";
+
+    // Convierte la fecha GMT de MySQL a hora local de México en español
+    function formatearFechaEspanol(fechaStr) {
+        if (!fechaStr) return { dia: "Sin fecha", hora: "" };
+        const fecha = new Date(fechaStr);
+        if (isNaN(fecha)) return { dia: fechaStr, hora: "" };
+
+        const opcionesDia = {
+            timeZone: "America/Mexico_City",
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        };
+
+        const opcionesHora = {
+            timeZone: "America/Mexico_City",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        };
+
+        return {
+            dia: fecha.toLocaleDateString("es-MX", opcionesDia),
+            hora: fecha.toLocaleTimeString("es-MX", opcionesHora)
+        };
+    }
+
+    // Agrega "%" automáticamente si el usuario o sensor escribe solo un número (ej. "56" -> "56%")
+    function formatearValor(val) {
+        if (!val) return "--";
+        const texto = String(val).trim();
+        return /^\d+(\.\d+)?$/.test(texto) ? `${texto}%` : texto;
+    }
+
+    function cargarDatos() {
+        const dot = document.getElementById("status-dot");
+        const statusText = document.getElementById("status-text");
+
+        fetch(`${API_URL}/datos`)
+            .then(res => {
+                if (!res.ok) throw new Error("Error de servidor");
+                return res.json();
+            })
+            .then(data => {
+                dot.classList.remove("offline");
+                statusText.textContent = "En línea · Aiven MySQL";
+
+                const tbody = document.getElementById("tabla-datos");
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="empty-msg">Aún no hay registros de riego guardados.</td></tr>`;
+                    document.getElementById("stat-total").textContent = "0";
+                    return;
+                }
+
+                // Ordenar del más reciente al más antiguo
+                const ordenados = [...data].sort((a, b) => b.id - a.id);
+
+                // Actualizar tarjetas superiores
+                document.getElementById("stat-total").textContent = ordenados.length;
+                document.getElementById("stat-ultima").textContent = ordenados[0].nombre;
+                const ultimaFecha = formatearFechaEspanol(ordenados[0].fecha);
+                document.getElementById("stat-hora").textContent = ultimaFecha.hora;
+
+                tbody.innerHTML = "";
+                ordenados.forEach(fila => {
+                    const f = formatearFechaEspanol(fila.fecha);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="badge-id">#${fila.id}</span></td>
+                            <td><span class="plant-name">🌿 ${fila.nombre}</span></td>
+                            <td><span class="badge-humedad">💧 ${formatearValor(fila.valor)}</span></td>
+                            <td>
+                                <div class="fecha-box">
+                                    <span class="fecha-dia">${f.dia}</span>
+                                    <span class="fecha-hora">🕒 ${f.hora}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                dot.classList.add("offline");
+                statusText.textContent = "Despertando servidor...";
+            });
+    }
+
+    function enviarDatos() {
+        const nombreInput = document.getElementById("nombre");
+        const valorInput = document.getElementById("valor");
+
+        if (!nombreInput.value.trim() || !valorInput.value.trim()) {
+            alert("Escribe el nombre de la planta y el nivel de humedad.");
+            return;
         }
 
-        // 2. Enviar un nuevo registro hacia MySQL
-        function enviarDatos() {
-            const nombreInput = document.getElementById("nombre");
-            const valorInput = document.getElementById("valor");
-
-            if (!nombreInput.value || !valorInput.value) {
-                alert("Por favor llena ambos campos.");
-                return;
-            }
-
-            fetch(`${API_URL}/guardar`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    nombre: nombreInput.value,
-                    valor: valorInput.value
-                })
+        fetch(`${API_URL}/guardar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nombre: nombreInput.value.trim(),
+                valor: valorInput.value.trim()
             })
-            .then(res => res.json())
-            .then(() => {
-                nombreInput.value = "";
-                valorInput.value = "";
-                cargarDatos(); // Actualiza la tabla al instante
-            })
-            .catch(err => console.error("Error al guardar:", err));
-        }
+        })
+        .then(res => res.json())
+        .then(() => {
+            nombreInput.value = "";
+            valorInput.value = "";
+            cargarDatos();
+        })
+        .catch(err => alert("Error al guardar el registro: " + err));
+    }
 
-        // Cargar registros automáticamente al abrir la página
-        cargarDatos();
-    </script>
+    // Cargar al iniciar y actualizar automáticamente cada 15 segundos
+    cargarDatos();
+    setInterval(cargarDatos, 15000);
+</script>
 
 </body>
 </html>
