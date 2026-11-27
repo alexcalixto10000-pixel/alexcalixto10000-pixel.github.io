@@ -7,188 +7,281 @@
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 <style>
 :root{
-  --bg:#eef5ef; --surface:#ffffff; --ink:#122018; --muted:#5d6e64;
-  --leaf:#1f6b3c; --leaf-deep:#14492a; --leaf-soft:#e3f3e7;
-  --gold:#eab308; --sky:#2563eb; --sky-soft:#e6eefc;
-  --amber:#b45309; --amber-soft:#fdecd2;
-  --red:#b91c1c; --red-soft:#fbe2e1;
-  --border:#dde6de; --shadow:0 1px 2px rgba(18,32,24,.06),0 6px 18px rgba(18,32,24,.05);
+  --bg:#f6faf7;
+  --surface:#ffffff;
+  --surface-alt:#fbfdfb;
+  --ink:#1e2f25;
+  --muted:#687c70;
+  --leaf:#2d7a4f;
+  --leaf-light:#4da172;
+  --leaf-deep:#1d5436;
+  --leaf-soft:#eaf5ee;
+  --sage-border:#cfe3d6;
+  --gold:#d49a1a;
+  --gold-soft:#fef8e7;
+  --sky:#2b7de9;
+  --sky-soft:#ebf3fe;
+  --amber:#c26d18;
+  --amber-soft:#fef3e2;
+  --red:#c93b3b;
+  --red-soft:#fdecec;
+  --shadow:0 4px 20px rgba(34, 78, 52, 0.045), 0 1px 3px rgba(34, 78, 52, 0.03);
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0e1712; --surface:#15221a; --ink:#e9f2ec; --muted:#9fb3a6;
-    --leaf-soft:#173023; --sky-soft:#162238; --amber-soft:#2c2112; --red-soft:#2d1818;
-    --border:#243830; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
-    color-scheme:dark;
-  }
-}
 :root[data-theme="dark"]{
-  --bg:#0e1712; --surface:#15221a; --ink:#e9f2ec; --muted:#9fb3a6;
-  --leaf-soft:#173023; --sky-soft:#162238; --amber-soft:#2c2112; --red-soft:#2d1818;
-  --border:#243830; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  --bg:#101914;
+  --surface:#17241d;
+  --surface-alt:#1b2a22;
+  --ink:#e9f2ec;
+  --muted:#98aea1;
+  --leaf:#4da172;
+  --leaf-light:#6bc291;
+  --leaf-deep:#a7e3c0;
+  --leaf-soft:#1d3327;
+  --sage-border:#283f33;
+  --gold:#eab308;
+  --gold-soft:#2d2614;
+  --sky:#60a5fa;
+  --sky-soft:#19283d;
+  --amber:#fbbf24;
+  --amber-soft:#2e2414;
+  --red:#f87171;
+  --red-soft:#301b1b;
+  --shadow:0 6px 22px rgba(0, 0, 0, 0.28);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:var(--bg); color:var(--ink);
+  background:var(--bg);
+  background-image:radial-gradient(circle at 12% 8%, rgba(77,161,114,0.07) 0%, transparent 38%),
+                   radial-gradient(circle at 88% 85%, rgba(43,125,233,0.05) 0%, transparent 40%);
+  color:var(--ink);
   font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  line-height:1.45;
 }
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--leaf-deep);}
 
+/* HEADER MINIMALISTA LUMINOSO */
 header{
-  position:sticky; top:env(safe-area-inset-top,0px); z-index:10;
-  background:linear-gradient(135deg,#0d351e 0%,var(--leaf-deep) 55%,var(--leaf) 100%);
-  color:#eaf6ee; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
-  gap:12px; flex-wrap:wrap; border-bottom:3px solid var(--gold);
+  position:sticky; top:0; z-index:15;
+  background:rgba(255, 255, 255, 0.88);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  color:var(--ink);
+  padding:14px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px; flex-wrap:wrap;
+  border-bottom:1.5px solid var(--sage-border);
 }
+:root[data-theme="dark"] header{background:rgba(23, 36, 29, 0.88);}
+
 .brand{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
 .tesoem-crest{
   display:flex; align-items:center; gap:10px;
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.24);
-  border-radius:12px; padding:6px 12px; backdrop-filter:blur(4px);
+  background:var(--leaf-soft);
+  border:1px solid var(--sage-border);
+  border-radius:14px 4px 14px 4px;
+  padding:6px 13px;
 }
 .crest-meta{display:flex; flex-direction:column; line-height:1.15}
-.crest-meta span{font-size:.68rem; font-weight:800; letter-spacing:.9px; color:#fde047; text-transform:uppercase}
-.crest-meta strong{font-size:.92rem; color:#ffffff}
-.brand h1{margin:0; font-size:1.3rem; letter-spacing:.2px; display:flex; align-items:center; gap:8px}
-.tag-5s2{background:var(--gold); color:#102418; font-size:.72rem; font-weight:800; padding:2px 8px; border-radius:6px}
-.brand p{margin:2px 0 0; font-size:.78rem; color:#c6e2cc}
+.crest-meta span{font-size:.66rem; font-weight:800; letter-spacing:.9px; color:var(--leaf); text-transform:uppercase}
+.crest-meta strong{font-size:.9rem; color:var(--ink)}
+.brand h1{margin:0; font-size:1.32rem; font-weight:700; letter-spacing:-.2px; display:flex; align-items:center; gap:8px; color:var(--ink)}
+.tag-5s2{background:var(--gold-soft); color:#9a6b06; border:1px solid #f3d98b; font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px}
+:root[data-theme="dark"] .tag-5s2{color:#fde047; border-color:#574618}
+.brand p{margin:2px 0 0; font-size:.78rem; color:var(--muted)}
 
 .head-actions{display:flex; align-items:center; gap:8px}
 .status-pill{
-  display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12);
-  padding:7px 13px; border-radius:999px; font-size:.82rem; font-weight:500;
+  display:flex; align-items:center; gap:7px;
+  background:var(--surface-alt); border:1px solid var(--sage-border);
+  padding:7px 14px; border-radius:999px; font-size:.82rem; font-weight:500; color:var(--ink);
 }
-.dot{width:8px; height:8px; border-radius:50%; background:#facc15}
-.dot.ok{background:#4ade80; box-shadow:0 0 8px #4ade80} .dot.off{background:#f87171}
+.dot{width:8px; height:8px; border-radius:50%; background:#eab308}
+.dot.ok{background:#22c55e; box-shadow:0 0 8px rgba(34,197,94,.55)}
+.dot.off{background:#ef4444}
 .icon-btn{
-  background:rgba(255,255,255,.14); border:none; color:#fff; width:36px; height:36px;
-  border-radius:10px; cursor:pointer; font-size:1.05rem; display:grid; place-items:center; transition:.2s;
+  background:var(--surface-alt); border:1px solid var(--sage-border); color:var(--ink);
+  width:38px; height:38px; border-radius:12px; cursor:pointer; font-size:1rem;
+  display:grid; place-items:center; transition:.2s;
 }
-.icon-btn:hover{background:rgba(255,255,255,.25)}
+.icon-btn:hover{background:var(--leaf-soft); border-color:var(--leaf-light)}
 
-main{max-width:1280px; margin:0 auto; padding:22px 20px 60px; display:grid; grid-template-columns:1fr 1.5fr; gap:20px;}
+/* LAYOUT PRINCIPAL */
+main{max-width:1280px; margin:0 auto; padding:26px 22px 64px; display:grid; grid-template-columns:1fr 1.5fr; gap:24px;}
 @media (max-width:880px){ main{grid-template-columns:1fr;} }
 
-.card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow);}
-.viewer{display:flex; flex-direction:column; gap:16px;}
+.card{
+  background:var(--surface);
+  border:1px solid var(--sage-border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.viewer{display:flex; flex-direction:column; gap:18px;}
 
+/* VISOR 3D MINIMALISTA */
 .viewer-box{
-  border:1px solid var(--border); border-radius:14px; min-height:375px;
+  border:1px solid var(--sage-border);
+  border-radius:22px 8px 22px 8px;
+  min-height:385px;
   display:flex; flex-direction:column; align-items:center; justify-content:space-between; text-align:center;
-  padding:18px 20px; background:radial-gradient(circle at 50% 35%, var(--leaf-soft) 0%, var(--surface) 78%);
+  padding:20px 22px;
+  background:linear-gradient(180deg, #ffffff 0%, var(--leaf-soft) 100%);
   box-shadow:var(--shadow); position:relative; overflow:hidden;
 }
+:root[data-theme="dark"] .viewer-box{background:linear-gradient(180deg, var(--surface) 0%, #13221a 100%);}
+
 .viewer-top{
   width:100%; display:flex; justify-content:space-between; align-items:center;
   font-size:.74rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;
 }
-.chip-hw{background:var(--leaf-soft); color:var(--leaf); border:1px solid var(--border); padding:3px 9px; border-radius:999px}
-.iso-scene{width:100%; max-width:315px; margin:4px auto; transition:transform .3s ease;}
-.iso-scene:hover{transform:translateY(-3px) scale(1.02)}
+.chip-hw{background:var(--surface); color:var(--leaf); border:1px solid var(--sage-border); padding:4px 10px; border-radius:999px}
+.iso-scene{width:100%; max-width:315px; margin:6px auto; transition:transform .35s ease;}
+.iso-scene:hover{transform:translateY(-4px) scale(1.02)}
 .water-drops{opacity:0; transition:opacity .25s ease;}
 .watering .water-drops{opacity:1; animation:dropPulse .7s infinite alternate;}
-@keyframes dropPulse{from{opacity:.4; transform:translateY(-2px)}to{opacity:1; transform:translateY(3px)}}
-.viewer-box h3{margin:0; font-size:1.02rem}
-.viewer-box p{margin:3px 0 0; color:var(--muted); font-size:.82rem; max-width:300px}
+@keyframes dropPulse{from{opacity:.45; transform:translateY(-2px)}to{opacity:1; transform:translateY(3px)}}
+.viewer-box h3{margin:0; font-size:1.04rem; color:var(--ink)}
+.viewer-box p{margin:4px 0 0; color:var(--muted); font-size:.82rem; max-width:300px}
 
-.gauge-card{padding:20px; display:flex; align-items:center; gap:18px;}
+.gauge-card{padding:22px; display:flex; align-items:center; gap:20px;}
 .gauge-card svg{flex:none}
-.gauge-txt h4{margin:0 0 2px; font-size:.85rem; color:var(--muted); font-weight:600}
-.gauge-txt .big{font-size:1.9rem; font-weight:700; line-height:1}
-.gauge-txt .state{margin-top:5px; font-size:.82rem; font-weight:600; padding:2px 9px; border-radius:999px; display:inline-block}
+.gauge-txt h4{margin:0 0 3px; font-size:.84rem; color:var(--muted); font-weight:600}
+.gauge-txt .big{font-size:2rem; font-weight:700; line-height:1; color:var(--ink)}
+.gauge-txt .state{margin-top:6px; font-size:.8rem; font-weight:600; padding:3px 11px; border-radius:999px; display:inline-block}
 
-.controls{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px;}
-.ctrl{padding:18px; display:flex; flex-direction:column; gap:10px;}
-.ctrl.auto-on{border-color:#9bd9ae; background:var(--leaf-soft);}
+/* TARJETAS DE CONTROL */
+.controls{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;}
+.ctrl{padding:20px; display:flex; flex-direction:column; gap:11px; transition:border-color .2s, background .2s;}
+.ctrl.auto-on{border-color:#98cbb0; background:linear-gradient(180deg, var(--surface) 0%, var(--leaf-soft) 100%);}
 .ctrl-top{display:flex; align-items:center; justify-content:space-between; gap:8px}
-.ctrl-top h3{margin:0; font-size:1rem; display:flex; align-items:center; gap:8px}
-.bulb{font-size:1.3rem; opacity:.35; filter:grayscale(1); transition:.25s}
-.bulb.on{opacity:1; filter:none; text-shadow:0 0 10px #facc15}
-.ctrl p.desc{margin:0; font-size:.84rem; color:var(--muted); line-height:1.4}
+.ctrl-top h3{margin:0; font-size:.98rem; font-weight:600; display:flex; align-items:center; gap:8px}
+.bulb{font-size:1.25rem; opacity:.35; filter:grayscale(1); transition:.25s}
+.bulb.on{opacity:1; filter:none; text-shadow:0 0 12px #facc15}
+.ctrl p.desc{margin:0; font-size:.84rem; color:var(--muted); line-height:1.45}
+
 .switch{position:relative; width:44px; height:24px; flex:none}
 .switch input{opacity:0; width:0; height:0}
-.slider{position:absolute; inset:0; background:#c9d4cc; border-radius:999px; cursor:pointer; transition:.2s}
-.slider::before{content:"";position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s}
+.slider{position:absolute; inset:0; background:#d5e2da; border-radius:999px; cursor:pointer; transition:.2s}
+.slider::before{content:"";position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.15)}
 input:checked + .slider{background:var(--leaf)}
 input:checked + .slider::before{transform:translateX(20px)}
+
 select, .api-input{
-  width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border);
-  background:var(--bg); color:var(--ink); font-size:.86rem;
+  width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--sage-border);
+  background:var(--surface-alt); color:var(--ink); font-size:.86rem; outline:none; transition:border-color .2s;
 }
+select:focus, .api-input:focus{border-color:var(--leaf)}
+
 .btn{
-  border:none; border-radius:9px; padding:10px 14px; font-size:.88rem; font-weight:600;
-  cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:none; border-radius:11px; padding:10px 15px; font-size:.87rem; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:.2s;
 }
-.btn-primary{background:var(--sky); color:#fff;}
+.btn-primary{background:var(--leaf); color:#fff;}
+.btn-primary:hover{background:var(--leaf-deep);}
 .btn-primary:disabled{opacity:.65; cursor:wait;}
-.btn-ghost{background:var(--leaf-soft); color:var(--leaf-deep);}
-:root[data-theme="dark"] .btn-ghost{color:#bbf7d0}
+.btn-ghost{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid transparent;}
+.btn-ghost:hover{border-color:var(--sage-border);}
 .spin{width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.5); border-top-color:#fff; animation:sp .7s linear infinite; display:none;}
 .loading .spin{display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-.monitor{padding:18px;}
-.m-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:4px;}
-.m-head h3{margin:0; font-size:1.05rem; display:flex; align-items:center; gap:8px}
+/* MONITOREO Y TABLA CON MARCO BOTÁNICO */
+.monitor{padding:22px; position:relative;}
+.m-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:2px;}
+.m-head h3{margin:0; font-size:1.06rem; display:flex; align-items:center; gap:8px}
 .sub{font-size:.78rem; color:var(--muted); margin:2px 0 14px}
-.spark{display:flex; align-items:flex-end; gap:4px; height:46px; margin:4px 0 14px;}
-.spark i{flex:1; background:var(--sky); opacity:.75; border-radius:3px 3px 0 0; min-height:3px; transition:height .3s}
+.spark{display:flex; align-items:flex-end; gap:5px; height:44px; margin:4px 0 18px; padding:0 4px;}
+.spark i{flex:1; background:linear-gradient(180deg, var(--leaf-light), #93d3b0); border-radius:5px 5px 2px 2px; min-height:4px; transition:height .3s}
+
+/* Contenedor con bordes orgánicos de hojas */
+.botanical-table-wrap{
+  position:relative;
+  border:1.5px solid var(--sage-border);
+  border-radius:22px 6px 22px 6px;
+  background:var(--surface);
+  overflow:hidden;
+  box-shadow:inset 0 0 0 3px var(--surface-alt);
+}
+/* Ramitas decorativas en las esquinas de la tabla */
+.vine-corner{
+  position:absolute;
+  pointer-events:none;
+  z-index:3;
+  color:var(--leaf-light);
+  opacity:.72;
+}
+.vine-tr{top:-2px; right:-2px;}
+.vine-bl{bottom:-2px; left:-2px; transform:rotate(180deg);}
+
+/* Cenefa botánica minimalista bajo el encabezado de la tabla */
+.vine-divider{
+  height:10px;
+  width:100%;
+  background-color:var(--leaf-soft);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='10' viewBox='0 0 48 10'%3E%3Cpath d='M0 5 Q12 5 24 5 T48 5' stroke='%2398cbb0' stroke-width='1' fill='none'/%3E%3Cpath d='M14 5 C16 1.5, 20 1.5, 22 5 C20 5.5, 16 5.5, 14 5 Z' fill='%234da172' fill-opacity='0.55'/%3E%3Cpath d='M34 5 C36 8.5, 40 8.5, 42 5 C40 4.5, 36 4.5, 34 5 Z' fill='%234da172' fill-opacity='0.55'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;
+  border-bottom:1px solid var(--sage-border);
+}
+
 table{width:100%; border-collapse:collapse; font-size:.86rem;}
 thead th{
-  text-align:left; font-size:.72rem; letter-spacing:.03em; color:var(--muted); font-weight:600;
-  padding:8px 10px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);
+  text-align:left; font-size:.73rem; letter-spacing:.04em; color:var(--leaf-deep); font-weight:700;
+  padding:12px 14px; background:var(--leaf-soft); text-transform:uppercase;
 }
-tbody{display:block; max-height:300px; overflow-y:auto;}
+tbody{display:block; max-height:295px; overflow-y:auto;}
 thead, tbody tr{display:table; width:100%; table-layout:fixed;}
-td{padding:10px; border-bottom:1px solid var(--border); vertical-align:top;}
+tbody tr{transition:background .15s;}
+tbody tr:hover{background:var(--leaf-soft);}
+td{padding:11px 14px; border-bottom:1px dashed var(--sage-border); vertical-align:middle;}
 tr:last-child td{border-bottom:none}
-.plant-cell{display:flex; align-items:center; gap:6px; font-weight:500; text-transform:capitalize}
-.badge{display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.8rem; font-weight:600;}
+
+.plant-cell{display:flex; align-items:center; gap:7px; font-weight:600; text-transform:capitalize; color:var(--ink)}
+.badge{display:inline-flex; align-items:center; gap:5px; padding:4px 11px; border-radius:999px; font-size:.79rem; font-weight:600;}
 .badge.high{background:var(--sky-soft); color:var(--sky);}
 .badge.mid{background:var(--amber-soft); color:var(--amber);}
 .badge.low{background:var(--red-soft); color:var(--red);}
-.badge.manual{background:var(--leaf-soft); color:var(--leaf-deep);}
-:root[data-theme="dark"] .badge.manual{color:#86efac}
+.badge.manual{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border);}
 .badge.alert{background:var(--red-soft); color:var(--red);}
-.badge.offbulb{background:var(--border); color:var(--muted);}
-.when{line-height:1.3}
-.when .clock{color:var(--muted); font-size:.78rem}
+.badge.offbulb{background:var(--surface-alt); color:var(--muted); border:1px solid var(--sage-border);}
+.when{line-height:1.35; font-size:.83rem}
+.when .clock{color:var(--muted); font-size:.76rem}
 
-.overlay{position:fixed; inset:0; background:rgba(10,20,14,.5); display:none; align-items:center; justify-content:center; z-index:50; padding:16px;}
+/* MODAL DE CONFIGURACIÓN */
+.overlay{position:fixed; inset:0; background:rgba(20,38,28,.35); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:50; padding:16px;}
 .overlay.show{display:flex}
-.panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; max-width:420px; width:100%; padding:22px; box-shadow:var(--shadow);}
+.panel{background:var(--surface); border:1px solid var(--sage-border); border-radius:20px; max-width:420px; width:100%; padding:24px; box-shadow:var(--shadow);}
 .panel h3{margin:0 0 4px}
 .panel p.hint{margin:0 0 16px; font-size:.84rem; color:var(--muted)}
 .field{margin-bottom:14px}
 .field label{display:block; font-size:.82rem; font-weight:600; margin-bottom:5px}
-.panel-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:6px}
-.btn-text{background:none; color:var(--muted); border:none; cursor:pointer; font-size:.86rem;}
-.note{font-size:.78rem; background:var(--amber-soft); color:var(--amber); padding:8px 10px; border-radius:8px; margin-top:4px;}
+.panel-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:8px}
+.btn-text{background:none; color:var(--muted); border:none; cursor:pointer; font-size:.86rem; padding:8px 12px;}
+.note{font-size:.78rem; background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border); padding:9px 11px; border-radius:10px; margin-top:4px;}
 
-.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(140%); background:var(--leaf-deep); color:#fff; padding:10px 18px; border-radius:999px; font-size:.86rem; transition:.25s; z-index:60;}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(140%); background:var(--leaf-deep); color:#fff; padding:10px 20px; border-radius:999px; font-size:.85rem; box-shadow:0 6px 16px rgba(0,0,0,.15); transition:.25s; z-index:60;}
+:root[data-theme="dark"] .toast{background:#2d7a4f;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px 30px; line-height:1.5;}
+footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px 32px; line-height:1.55;}
 </style>
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <!-- LOGO VECTORIAL TESOEM · GRUPO 5S2 -->
+    <!-- EMBLEMA MINIMALISTA TESOEM · GRUPO 5S2 -->
     <div class="tesoem-crest" title="Tecnológico de Estudios Superiores del Oriente del Estado de México">
-      <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 4L56 15V35C56 47.8 45.4 56 32 60C18.6 56 8 47.8 8 35V15L32 4Z" fill="#0b2817" stroke="#eab308" stroke-width="3"/>
-        <path d="M17 22H24L27 26M47 22H40L37 26M20 43H27L32 38L37 43H44" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="17" cy="22" r="2.2" fill="#eab308"/>
-        <circle cx="47" cy="22" r="2.2" fill="#eab308"/>
-        <path d="M32 14C32 14 24.5 23 24.5 28.8C24.5 33 27.8 36.3 32 36.3C36.2 36.3 39.5 33 39.5 28.8C39.5 23 32 14 32 14Z" fill="#38bdf8" fill-opacity="0.28" stroke="#38bdf8" stroke-width="2"/>
-        <path d="M32 33V23M32 27C32 27 28 26 27 23C30 23 32 25 32 27ZM32 25C32 25 36 24 37 21C34 21 32 23 32 25Z" stroke="#bbf7d0" stroke-width="2" stroke-linecap="round"/>
-        <rect x="16" y="46" width="32" height="10" rx="3" fill="#eab308"/>
-        <text x="32" y="53" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="7" font-weight="900" fill="#0d2618">TESOEM</text>
+      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 5L54 15.5V34.5C54 46.8 44.2 54.8 32 58.5C19.8 54.8 10 46.8 10 34.5V15.5L32 5Z" fill="#ffffff" stroke="#2d7a4f" stroke-width="2.8"/>
+        <path d="M18 23H24.5L27 26.5M46 23H39.5L37 26.5M21 42H27.5L32 37.5L36.5 42H43" stroke="#4da172" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="18" cy="23" r="2.2" fill="#d49a1a"/>
+        <circle cx="46" cy="23" r="2.2" fill="#d49a1a"/>
+        <path d="M32 14.5C32 14.5 25 22.8 25 28.2C25 32.1 28.1 35.2 32 35.2C35.9 35.2 39 32.1 39 28.2C39 22.8 32 14.5 32 14.5Z" fill="#ebf3fe" stroke="#2b7de9" stroke-width="2"/>
+        <path d="M32 32V23M32 26.5C32 26.5 28.5 25.5 27.5 23C30 23 32 24.8 32 26.5ZM32 25C32 25 35.5 24 36.5 21.5C34 21.5 32 23.2 32 25Z" stroke="#2d7a4f" stroke-width="2" stroke-linecap="round"/>
+        <rect x="16" y="45" width="32" height="9.5" rx="4" fill="#2d7a4f"/>
+        <text x="32" y="51.8" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="6.8" font-weight="800" fill="#ffffff">TESOEM</text>
       </svg>
       <div class="crest-meta">
         <span>TESOEM · ISC</span>
@@ -197,14 +290,14 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
     </div>
 
     <div>
-      <h1>AquaSmart <span class="tag-5s2">5S2 · IoT</span></h1>
+      <h1>AquaSmart <span class="tag-5s2">5S2 · Botánica IoT</span></h1>
       <p>Tecnológico de Estudios Superiores del Oriente del Estado de México · Riego Automatizado</p>
     </div>
   </div>
 
   <div class="head-actions">
     <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusTxt">Modo demostración</span></div>
-    <button class="icon-btn" id="themeBtn" title="Cambiar tema claro/oscuro">🌓</button>
+    <button class="icon-btn" id="themeBtn" title="Alternar modo claro / oscuro">🌓</button>
     <button class="icon-btn" id="openSettings" title="Configurar conexión">⚙️</button>
   </div>
 </header>
@@ -214,58 +307,58 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
     <div class="viewer-box" id="viewerStage">
       <div class="viewer-top">
         <span>Nodo de Telemetría · 5S2</span>
-        <span class="chip-hw">Pico WH + Bomba</span>
+        <span class="chip-hw">Pico WH + Sensor</span>
       </div>
 
-      <!-- MAQUETA 3D ISOMÉTRICA DEL SISTEMA DE RIEGO -->
+      <!-- MAQUETA 3D ISOMÉTRICA LUMINOSA -->
       <svg class="iso-scene" viewBox="0 0 320 245" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="160,232 32,168 160,104 288,168" fill="#1f6b3c" fill-opacity="0.14" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <polygon points="160,232 32,168 160,104 288,168" fill="#2d7a4f" fill-opacity="0.09" stroke="#4da172" stroke-width="1.5" stroke-dasharray="4 4"/>
         
-        <!-- Raspberry Pi Pico WH -->
+        <!-- Placa Raspberry Pi Pico WH -->
         <g transform="translate(44, 136)">
-          <polygon points="34,0 68,17 34,34 0,17" fill="#166534" stroke="#4ade80" stroke-width="1.5"/>
-          <polygon points="0,17 34,34 34,40 0,23" fill="#0d351e"/>
-          <polygon points="34,34 68,17 68,23 34,40" fill="#14532d"/>
-          <polygon points="34,11 44,16 34,21 24,16" fill="#1e293b"/>
-          <polygon points="48,14 58,19 51,23 41,18" fill="#cbd5e1"/>
+          <polygon points="34,0 68,17 34,34 0,17" fill="#2d7a4f" stroke="#86efac" stroke-width="1.5"/>
+          <polygon points="0,17 34,34 34,40 0,23" fill="#1d5436"/>
+          <polygon points="34,34 68,17 68,23 34,40" fill="#246842"/>
+          <polygon points="34,11 44,16 34,21 24,16" fill="#334155"/>
+          <polygon points="48,14 58,19 51,23 41,18" fill="#e2e8f0"/>
           <circle id="picoLed" cx="22" cy="14" r="3.2" fill="#4ade80"/>
         </g>
 
-        <!-- Depósito de agua -->
+        <!-- Tanque de agua -->
         <g transform="translate(212, 114)">
-          <ellipse cx="28" cy="48" rx="24" ry="12" fill="#0284c7" fill-opacity="0.25" stroke="#0284c7" stroke-width="1.5"/>
-          <path d="M4 16V48C4 54.6 14.7 60 28 60C41.3 60 52 54.6 52 48V16" fill="#38bdf8" fill-opacity="0.2" stroke="#0284c7" stroke-width="1.5"/>
-          <ellipse cx="28" cy="24" rx="23" ry="11" fill="#38bdf8" fill-opacity="0.45"/>
-          <ellipse cx="28" cy="16" rx="24" ry="12" fill="#e0f2fe" fill-opacity="0.45" stroke="#0284c7" stroke-width="1.5"/>
+          <ellipse cx="28" cy="48" rx="24" ry="12" fill="#2b7de9" fill-opacity="0.18" stroke="#2b7de9" stroke-width="1.5"/>
+          <path d="M4 16V48C4 54.6 14.7 60 28 60C41.3 60 52 54.6 52 48V16" fill="#60a5fa" fill-opacity="0.16" stroke="#2b7de9" stroke-width="1.5"/>
+          <ellipse cx="28" cy="24" rx="23" ry="11" fill="#60a5fa" fill-opacity="0.35"/>
+          <ellipse cx="28" cy="16" rx="24" ry="12" fill="#eff6ff" fill-opacity="0.7" stroke="#2b7de9" stroke-width="1.5"/>
         </g>
 
         <!-- Línea de riego y gotas -->
-        <path d="M216 146 C190 130, 185 88, 168 94" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>
+        <path d="M216 146 C190 130, 185 88, 168 94" stroke="#2b7de9" stroke-width="3.5" stroke-linecap="round"/>
         <g class="water-drops">
           <circle cx="163" cy="103" r="3" fill="#38bdf8"/>
-          <circle cx="157" cy="112" r="2.5" fill="#0284c7"/>
+          <circle cx="157" cy="112" r="2.5" fill="#2b7de9"/>
           <circle cx="167" cy="115" r="2.5" fill="#38bdf8"/>
         </g>
 
-        <!-- Maceta y sensor de humedad -->
+        <!-- Maceta central -->
         <g transform="translate(112, 92)">
-          <path d="M12 36 L22 86 C22 93 74 93 74 86 L84 36 Z" fill="#b45309"/>
-          <path d="M48 36 L48 91 C63 91 74 89 74 86 L84 36 Z" fill="#92400e"/>
-          <ellipse cx="48" cy="36" rx="38" ry="15" fill="#d97706"/>
-          <ellipse cx="48" cy="36" rx="32" ry="11" fill="#3f2e21"/>
+          <path d="M12 36 L22 86 C22 93 74 93 74 86 L84 36 Z" fill="#c97a3a"/>
+          <path d="M48 36 L48 91 C63 91 74 89 74 86 L84 36 Z" fill="#b36527"/>
+          <ellipse cx="48" cy="36" rx="38" ry="15" fill="#df9352"/>
+          <ellipse cx="48" cy="36" rx="32" ry="11" fill="#5c4332"/>
           <g transform="translate(60, 14)">
-            <rect x="0" y="0" width="8" height="22" rx="1.5" fill="#1e293b" stroke="#eab308" stroke-width="1"/>
+            <rect x="0" y="0" width="8" height="22" rx="1.5" fill="#334155" stroke="#eab308" stroke-width="1"/>
             <line x1="2.5" y1="22" x2="2.5" y2="30" stroke="#eab308" stroke-width="1.5"/>
             <line x1="5.5" y1="22" x2="5.5" y2="30" stroke="#eab308" stroke-width="1.5"/>
           </g>
-          <path d="M48 36 C48 22, 46 10, 48 -14" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
-          <path d="M48 16 C32 14, 22 4, 24 -4 C34 -4, 44 4, 48 16 Z" fill="#22c55e"/>
-          <path d="M48 8 C64 6, 74 -4, 72 -12 C62 -12, 52 -4, 48 8 Z" fill="#16a34a"/>
-          <path d="M48 -4 C36 -12, 32 -24, 38 -30 C46 -26, 50 -14, 48 -4 Z" fill="#4ade80"/>
-          <path d="M48 -10 C58 -18, 64 -28, 58 -34 C50 -30, 46 -18, 48 -10 Z" fill="#22c55e"/>
+          <path d="M48 36 C48 22, 46 10, 48 -14" stroke="#2d7a4f" stroke-width="4" stroke-linecap="round"/>
+          <path d="M48 16 C32 14, 22 4, 24 -4 C34 -4, 44 4, 48 16 Z" fill="#4da172"/>
+          <path d="M48 8 C64 6, 74 -4, 72 -12 C62 -12, 52 -4, 48 8 Z" fill="#2d7a4f"/>
+          <path d="M48 -4 C36 -12, 32 -24, 38 -30 C46 -26, 50 -14, 48 -4 Z" fill="#74c69d"/>
+          <path d="M48 -10 C58 -18, 64 -28, 58 -34 C50 -30, 46 -18, 48 -10 Z" fill="#4da172"/>
         </g>
 
-        <path d="M174 112 C155 152, 118 166, 98 156" stroke="#eab308" stroke-width="2" stroke-dasharray="3 3"/>
+        <path d="M174 112 C155 152, 118 166, 98 156" stroke="#d49a1a" stroke-width="2" stroke-dasharray="3 3"/>
       </svg>
 
       <div>
@@ -276,8 +369,8 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
 
     <div class="card gauge-card">
       <svg width="86" height="86" viewBox="0 0 86 86">
-        <circle cx="43" cy="43" r="36" fill="none" stroke="var(--border)" stroke-width="9"/>
-        <circle id="gaugeArc" cx="43" cy="43" r="36" fill="none" stroke="var(--sky)" stroke-width="9"
+        <circle cx="43" cy="43" r="36" fill="none" stroke="var(--leaf-soft)" stroke-width="9"/>
+        <circle id="gaugeArc" cx="43" cy="43" r="36" fill="none" stroke="var(--leaf)" stroke-width="9"
           stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 43 43)"/>
         <text id="gaugeNum" x="43" y="49" text-anchor="middle" font-size="19" font-weight="700" fill="var(--ink)">--</text>
       </svg>
@@ -293,14 +386,14 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
     <div class="controls">
       <div class="card ctrl auto-on" id="autoCard">
         <div class="ctrl-top">
-          <h3>🤖 Riego automático inteligente</h3>
+          <h3>🤖 Riego automático</h3>
           <label class="switch"><input type="checkbox" id="autoToggle" checked><span class="slider"></span></label>
         </div>
-        <p class="desc">Activa la bomba cuando la humedad baja del umbral configurado. Umbral actual: <strong id="thresholdLabel">35%</strong>.</p>
+        <p class="desc">Activa la bomba cuando la humedad baja del umbral configurado (<strong id="thresholdLabel">35%</strong>).</p>
       </div>
       <div class="card ctrl">
-        <div class="ctrl-top"><h3>💧 Riego manual bajo control</h3></div>
-        <p class="desc">Envía la orden de riego inmediato a la planta elegida y lo registra en la base de datos.</p>
+        <div class="ctrl-top"><h3>💧 Riego manual</h3></div>
+        <p class="desc">Envía la orden de riego inmediato a la planta elegida y lo guarda en la bitácora.</p>
         <select id="plantSelect">
           <option>Planta Principal</option>
           <option>Suculenta</option>
@@ -309,23 +402,53 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
         <button class="btn btn-primary" id="waterBtn"><span class="spin"></span><span id="waterLabel">Regar ahora</span></button>
       </div>
       <div class="card ctrl" id="focoCard">
-        <div class="ctrl-top"><h3>💡 Alerta de exceso de humedad</h3><span class="bulb" id="bulbIcon">💡</span></div>
-        <p class="desc">Si la humedad supera <strong id="maxLabel">75%</strong>, el foco se enciende solo para avisar exceso de agua. También puedes controlarlo manualmente.</p>
+        <div class="ctrl-top"><h3>💡 Alerta de exceso</h3><span class="bulb" id="bulbIcon">💡</span></div>
+        <p class="desc">Si la humedad supera <strong id="maxLabel">75%</strong>, el indicador avisa exceso de riego.</p>
         <button class="btn btn-ghost" id="focoBtn">Encender foco</button>
       </div>
     </div>
 
     <div class="card monitor">
       <div class="m-head">
-        <h3>📊 Historial y monitoreo de humedad</h3>
+        <h3>🌿 Bitácora de Humedad y Riego</h3>
         <button class="btn btn-ghost" id="refreshBtn">↻ Actualizar</button>
       </div>
       <p class="sub" id="syncSub">Se actualiza automáticamente cada 12 s · datos de demostración</p>
       <div class="spark" id="spark"></div>
-      <table>
-        <thead><tr><th style="width:12%">ID</th><th style="width:26%">Planta</th><th style="width:30%">Humedad / Estado</th><th>Fecha y hora (México)</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
+
+      <!-- TABLA CON BORDES Y RAMITAS BOTÁNICAS -->
+      <div class="botanical-table-wrap">
+        <!-- Ornamento de hojas esquina superior derecha -->
+        <svg class="vine-corner vine-tr" width="76" height="52" viewBox="0 0 76 52" fill="none">
+          <path d="M74 2 C54 4, 38 14, 26 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M56 7 C52 1, 44 2, 44 8 C49 9, 53 8, 56 7 Z" fill="currentColor" fill-opacity="0.35"/>
+          <path d="M43 15 C46 21, 53 21, 55 15 C50 14, 46 14, 43 15 Z" fill="currentColor" fill-opacity="0.35"/>
+          <path d="M33 22 C28 17, 21 19, 22 25 C27 25, 30 24, 33 22 Z" fill="currentColor" fill-opacity="0.35"/>
+        </svg>
+
+        <!-- Ornamento de hojas esquina inferior izquierda -->
+        <svg class="vine-corner vine-bl" width="76" height="52" viewBox="0 0 76 52" fill="none">
+          <path d="M74 2 C54 4, 38 14, 26 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M56 7 C52 1, 44 2, 44 8 C49 9, 53 8, 56 7 Z" fill="currentColor" fill-opacity="0.35"/>
+          <path d="M43 15 C46 21, 53 21, 55 15 C50 14, 46 14, 43 15 Z" fill="currentColor" fill-opacity="0.35"/>
+          <path d="M33 22 C28 17, 21 19, 22 25 C27 25, 30 24, 33 22 Z" fill="currentColor" fill-opacity="0.35"/>
+        </svg>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:12%">ID</th>
+              <th style="width:26%">Planta</th>
+              <th style="width:30%">Humedad / Estado</th>
+              <th>Fecha y hora (México)</th>
+            </tr>
+          </thead>
+        </table>
+        <div class="vine-divider"></div>
+        <table>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 </main>
@@ -361,14 +484,14 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
 <div class="toast" id="toast"></div>
 
 <script>
-// Opcional: pega aquí tu URL fija de Render para que cargue conectada en cualquier celular sin usar ⚙️
+// Pega aquí tu URL exacta de Render (sin diagonal / al final) para conectarse automáticamente
 const DEFAULT_API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com";
 
 const PLANTS = ["Planta Principal","Suculenta","Helecho"];
 let state = {apiUrl:DEFAULT_API_URL, threshold:35, maxThreshold:75, auto:true, focoOn:false, focoAuto:false, id:1, rows:[]};
 try{
   const saved = JSON.parse(localStorage.getItem("riego_cfg")||"{}");
-  state.apiUrl = saved.apiUrl || DEFAULT_API_URL;
+  state.apiUrl = DEFAULT_API_URL || saved.apiUrl || "";
   state.threshold = saved.threshold||35;
   state.maxThreshold = saved.maxThreshold||75;
   state.auto = saved.auto!==false;
@@ -442,9 +565,10 @@ function maybeAutoFoco(val){
 
 function render(){
   rowsEl.innerHTML = state.rows.slice(0,25).map(r=>`
-    <tr><td><strong>#${r.id}</strong></td>
-      <td class="plant-cell">${r.foco?"💡":"🌿"} ${r.plant}</td>
-      <td>${badgeFor(r)}</td>
+    <tr>
+      <td style="width:12%"><strong>#${r.id}</strong></td>
+      <td style="width:26%" class="plant-cell">${r.foco?"💡":"🌱"} ${r.plant}</td>
+      <td style="width:30%">${badgeFor(r)}</td>
       <td class="when">${r.line}<div class="clock">🕒 ${r.clock}</div></td>
     </tr>`).join("");
 
@@ -460,7 +584,7 @@ function render(){
     $("#gaugeNum").textContent = avg+"%";
     const off = 226 - (226*avg/100);
     $("#gaugeArc").setAttribute("stroke-dashoffset", off);
-    $("#gaugeArc").setAttribute("stroke", avg<30?"var(--red)":avg<60?"var(--amber)":"var(--sky)");
+    $("#gaugeArc").setAttribute("stroke", avg<30?"var(--red)":avg<60?"var(--amber)":"var(--leaf)");
     const hs=$("#healthState");
     if(avg<30){hs.textContent="Necesita agua"; hs.style.background="var(--red-soft)"; hs.style.color="var(--red)";}
     else if(avg<60){hs.textContent="Vigilar"; hs.style.background="var(--amber-soft)"; hs.style.color="var(--amber)";}
