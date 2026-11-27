@@ -361,7 +361,7 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
 <div class="toast" id="toast"></div>
 
 <script>
-// ⚠️ PEGA AQUÍ TU URL DE RENDER (sin diagonal / al final)
+// URL fija de tu servidor puente en Render
 const DEFAULT_API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com";
 
 let state = {
@@ -372,6 +372,8 @@ let state = {
   umbral_min: 10,
   umbral_max: 80
 };
+
+let sincronizando = false;
 
 try {
   const saved = JSON.parse(localStorage.getItem("riego_cfg") || "{}");
@@ -462,7 +464,10 @@ function actualizarUIControl(est) {
   }
 }
 
+// CORREGIDO: 1 sola petición a /todo con bloqueo anti-saturación
 async function sincronizarTodo() {
+  if (sincronizando) return;
+
   const base = state.apiUrl.replace(/\/$/, "");
   if (!base || base.includes("TU-SERVICIO")) {
     $("#statusDot").className = "dot off";
@@ -470,18 +475,15 @@ async function sincronizarTodo() {
     return;
   }
 
+  sincronizando = true;
   try {
-    const [resDatos, resFoco, resEstado] = await Promise.all([
-      fetch(base + "/datos"),
-      fetch(base + "/foco"),
-      fetch(base + "/estado")
-    ]);
+    const res = await fetch(base + "/todo", { signal: AbortSignal.timeout(15000) });
+    if (!res.ok) throw new Error("Error HTTP " + res.status);
 
-    if (!resDatos.ok || !resFoco.ok || !resEstado.ok) throw new Error("Error HTTP");
-
-    const datos = await resDatos.json();
-    const focos = await resFoco.json();
-    const estado = await resEstado.json();
+    const paquete = await res.json();
+    const datos = paquete.datos || [];
+    const focos = paquete.foco || [];
+    const estado = paquete.estado || null;
 
     $("#statusDot").className = "dot ok";
     $("#statusTxt").textContent = "En línea · Aiven + Pico WH";
@@ -513,8 +515,11 @@ async function sincronizarTodo() {
     }).join("") : `<tr><td colspan="5" style="text-align:center;color:var(--muted)">Sin registros del foco de calor aún.</td></tr>`;
 
   } catch (e) {
+    console.warn("Esperando respuesta de Render:", e);
     $("#statusDot").className = "dot off";
     $("#statusTxt").textContent = "Despertando Render...";
+  } finally {
+    sincronizando = false;
   }
 }
 
@@ -583,9 +588,9 @@ $("#saveSettings").onclick = () => {
   enviarOrden({ umbral_min: uMin, umbral_max: uMax }, "Configuración guardada");
 };
 
-// Iniciar sincronización automática cada 5 segundos
+// CORREGIDO: Sincronización cada 8 segundos
 sincronizarTodo();
-setInterval(sincronizarTodo, 5000);
+setInterval(sincronizarTodo, 8000);
 </script>
 </body>
 </html>
