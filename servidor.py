@@ -8,10 +8,10 @@ CORS(app)
 
 def conectar():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST"),
+        host=os.environ.get("DB_HOST","mysql-27028d1c-plantitas.l.aivencloud.com"),
         port=int(os.environ.get("DB_PORT", 3306)),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
+        user=os.environ.get("DB_USER","avnadmin"),
+        password=os.environ.get("DB_PASSWORD","AVNS_i6obPFXEL9WmI8TpD68"),
         database=os.environ.get("DB_NAME", "plantas_db"),
         ssl_disabled=False,
         connection_timeout=10  # Evita que Gunicorn se congele si Aiven tarda
