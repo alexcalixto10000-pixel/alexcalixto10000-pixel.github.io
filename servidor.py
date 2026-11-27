@@ -9,7 +9,7 @@ CORS(app)
 def conectar():
     return mysql.connector.connect(
         host=os.environ.get("DB_HOST","mysql-27028d1c-plantitas.l.aivencloud.com"),
-        port=int(os.environ.get("DB_PORT", 3306)),
+        port=int(os.environ.get("DB_PORT", 16236)),
         user=os.environ.get("DB_USER","avnadmin"),
         password=os.environ.get("DB_PASSWORD","AVNS_i6obPFXEL9WmI8TpD68"),
         database=os.environ.get("DB_NAME", "plantas_db"),
