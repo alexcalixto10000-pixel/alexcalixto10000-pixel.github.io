@@ -13,30 +13,58 @@ def conectar():
         user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
         database=os.environ.get("DB_NAME", "defaultdb"),
-        ssl_disabled=False
+        ssl_disabled=False,
+        connection_timeout=10  # Evita que Gunicorn se congele si Aiven tarda
     )
 
 @app.route('/', methods=['GET'])
 def inicio():
     return jsonify({"estado": "API AquaSmart TESOEM 5S2 conectada a Aiven"})
 
-# 1. Leer historial de riego y humedad
+# RUTA OPTIMIZADA: Trae riego, foco y estado en 1 sola conexión a Aiven
+@app.route('/todo', methods=['GET'])
+def obtener_todo():
+    conn = None
+    try:
+        conn = conectar()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM registros ORDER BY id DESC LIMIT 40")
+        datos = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM registros_foco ORDER BY id DESC LIMIT 40")
+        foco = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM control_remoto WHERE id = 1")
+        estado = cursor.fetchone()
+
+        cursor.close()
+        return jsonify({"datos": datos, "foco": foco, "estado": estado})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
+
 @app.route('/datos', methods=['GET'])
 def obtener_datos():
+    conn = None
     try:
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM registros ORDER BY id DESC LIMIT 50")
         filas = cursor.fetchall()
         cursor.close()
-        conn.close()
         return jsonify(filas)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
-# 2. Guardar registro manual en tabla de riego
 @app.route('/guardar', methods=['POST'])
 def guardar_dato():
+    conn = None
     try:
         datos = request.json
         nombre = datos.get('nombre', 'Planta')
@@ -46,42 +74,48 @@ def guardar_dato():
         cursor.execute("INSERT INTO registros (nombre, valor) VALUES (%s, %s)", (nombre, valor))
         conn.commit()
         cursor.close()
-        conn.close()
         return jsonify({"mensaje": "Guardado en registros"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
-# 3. Leer historial de la nueva tabla del foco de calor
 @app.route('/foco', methods=['GET'])
 def obtener_foco():
+    conn = None
     try:
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM registros_foco ORDER BY id DESC LIMIT 50")
         filas = cursor.fetchall()
         cursor.close()
-        conn.close()
         return jsonify(filas)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
-# 4. Consultar estado de botones y sensores en tiempo real
 @app.route('/estado', methods=['GET'])
 def obtener_estado():
+    conn = None
     try:
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM control_remoto WHERE id = 1")
         estado = cursor.fetchone()
         cursor.close()
-        conn.close()
         return jsonify(estado)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
-# 5. Recibir órdenes desde los botones de la página web
 @app.route('/control', methods=['POST'])
 def actualizar_control():
+    conn = None
     try:
         datos = request.json
         conn = conectar()
@@ -98,7 +132,6 @@ def actualizar_control():
             sql = f"UPDATE control_remoto SET {', '.join(campos)} WHERE id = 1"
             cursor.execute(sql, tuple(valores))
 
-        # Registrar acción manual en su tabla correspondiente
         if 'orden_bomba' in datos:
             txt_bomba = "Riego manual ACTIVADO desde Web" if int(datos['orden_bomba']) == 1 else "Riego manual DETENIDO desde Web"
             cursor.execute("INSERT INTO registros (nombre, valor) VALUES (%s, %s)", ("Sistema Web", txt_bomba))
@@ -117,14 +150,16 @@ def actualizar_control():
         cursor.execute("SELECT * FROM control_remoto WHERE id = 1")
         nuevo_estado = cursor.fetchone()
         cursor.close()
-        conn.close()
         return jsonify(nuevo_estado)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
-# 6. Endpoint único para la Raspberry Pi Pico WH (envía lecturas/eventos y recibe órdenes)
 @app.route('/telemetria', methods=['POST'])
 def telemetria_pico():
+    conn = None
     try:
         datos = request.json
         hum1 = float(datos.get('hum1', 0))
@@ -132,29 +167,25 @@ def telemetria_pico():
         hum_prom = round((hum1 + hum2) / 2.0, 1)
         bomba_real = 1 if datos.get('bomba') else 0
         foco_real = 1 if datos.get('foco') else 0
-        evento_bomba = datos.get('evento_bomba')  # Ej: "Riego iniciado" o "Riego completado"
-        evento_foco = datos.get('evento_foco')    # Ej: "Foco encendido" o "Foco apagado"
+        evento_bomba = datos.get('evento_bomba')
+        evento_foco = datos.get('evento_foco')
         modo_txt = datos.get('modo', 'Automático')
 
         conn = conectar()
         cursor = conn.cursor(dictionary=True)
 
-        # Actualizar lecturas vivas de la Pico WH
         cursor.execute(
             "UPDATE control_remoto SET hum1=%s, hum2=%s, bomba_real=%s, foco_real=%s WHERE id=1",
             (hum1, hum2, bomba_real, foco_real)
         )
 
-        # Si la Pico terminó el ciclo manual al llegar al 60%, apagar la orden remota
         if datos.get('fin_riego_manual'):
             cursor.execute("UPDATE control_remoto SET orden_bomba = 0 WHERE id = 1")
 
-        # Si hubo cambio de estado en la bomba, guardar registro en tabla 'registros'
         if evento_bomba:
             detalle = f"{evento_bomba} · Humedad {hum_prom}% (S1:{int(hum1)}% S2:{int(hum2)}%)"
             cursor.execute("INSERT INTO registros (nombre, valor) VALUES (%s, %s)", ("Pico WH", detalle))
 
-        # Si hubo cambio de estado en el foco, guardar registro en tabla 'registros_foco'
         if evento_foco:
             cursor.execute(
                 "INSERT INTO registros_foco (evento, humedad, modo) VALUES (%s, %s, %s)",
@@ -165,10 +196,12 @@ def telemetria_pico():
         cursor.execute("SELECT modo_auto, orden_bomba, orden_foco, umbral_min, umbral_max FROM control_remoto WHERE id = 1")
         ordenes = cursor.fetchone()
         cursor.close()
-        conn.close()
         return jsonify(ordenes)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn and conn.is_connected():
+            conn.close()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
