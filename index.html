@@ -1,501 +1,428 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Riego Automático</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Soporte listo para modelos 3D (.glb / .gltf) -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-    <style>
-        :root {
-            --primary: #15803d;
-            --primary-dark: #14532d;
-            --primary-light: #dcfce7;
-            --accent: #0284c7;
-            --accent-light: #e0f2fe;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text: #1e293b;
-            --muted: #64748b;
-            --border: #cbd5e1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AquaSmart · Riego Inteligente</title>
+<style>
+:root{
+  --bg:#eef5ef; --surface:#ffffff; --ink:#122018; --muted:#5d6e64;
+  --leaf:#1f6b3c; --leaf-deep:#14492a; --leaf-soft:#e3f3e7;
+  --sky:#2563eb; --sky-soft:#e6eefc;
+  --amber:#b45309; --amber-soft:#fdecd2;
+  --red:#b91c1c; --red-soft:#fbe2e1;
+  --border:#dde6de; --shadow:0 1px 2px rgba(18,32,24,.06),0 6px 18px rgba(18,32,24,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1712; --surface:#15221a; --ink:#e9f2ec; --muted:#9fb3a6;
+    --leaf-soft:#173023; --sky-soft:#162238; --amber-soft:#2c2112; --red-soft:#2d1818;
+    --border:#243830; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1712; --surface:#15221a; --ink:#e9f2ec; --muted:#9fb3a6;
+  --leaf-soft:#173023; --sky-soft:#162238; --amber-soft:#2c2112; --red-soft:#2d1818;
+  --border:#243830; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--leaf-deep);}
+header{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:10;
+  background:linear-gradient(135deg,var(--leaf-deep),var(--leaf));
+  color:#eaf6ee; padding:14px 20px; display:flex; align-items:center; justify-content:space-between;
+  gap:12px; flex-wrap:wrap; border-bottom:3px solid #0d3a20;
+}
+.brand{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.logo-slot{
+  border:1.5px dashed rgba(255,255,255,.55); border-radius:10px; padding:8px 14px;
+  font-size:.8rem; color:#d6ead9; display:flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.brand h1{margin:0; font-size:1.3rem; letter-spacing:.2px}
+.brand p{margin:2px 0 0; font-size:.78rem; color:#c6e2cc}
+.head-actions{display:flex; align-items:center; gap:10px}
+.status-pill{
+  display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12);
+  padding:7px 13px; border-radius:999px; font-size:.82rem;
+}
+.dot{width:8px; height:8px; border-radius:50%; background:#facc15}
+.dot.ok{background:#4ade80} .dot.off{background:#f87171}
+.gear{
+  background:rgba(255,255,255,.14); border:none; color:#fff; width:36px; height:36px;
+  border-radius:10px; cursor:pointer; font-size:1.05rem; display:grid; place-items:center;
+}
+.gear:hover{background:rgba(255,255,255,.24)}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+main{max-width:1280px; margin:0 auto; padding:22px 20px 60px; display:grid; grid-template-columns:1fr 1.5fr; gap:20px;}
+@media (max-width:880px){ main{grid-template-columns:1fr;} }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #ecfdf5 0%, #f1f5f9 100%);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+.card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow);}
+.viewer{display:flex; flex-direction:column; gap:16px;}
+.viewer-box{
+  border:1.5px dashed var(--border); border-radius:14px; min-height:360px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  padding:28px; gap:6px; background:var(--surface);
+}
+.viewer-box .ic{font-size:2.1rem}
+.viewer-box h3{margin:4px 0 0; font-size:1.05rem}
+.viewer-box p{margin:0; color:var(--muted); font-size:.88rem; max-width:280px}
 
-        /* 1. BARRA SUPERIOR PARA IMAGEN / BANNER */
-        .top-banner {
-            width: 100%;
-            height: 90px;
-            background: linear-gradient(90deg, #14532d 0%, #166534 100%);
-            border-bottom: 3px solid #22c55e;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+.gauge-card{padding:20px; display:flex; align-items:center; gap:18px;}
+.gauge-card svg{flex:none}
+.gauge-txt h4{margin:0 0 2px; font-size:.85rem; color:var(--muted); font-weight:600}
+.gauge-txt .big{font-size:1.9rem; font-weight:700; line-height:1}
+.gauge-txt .state{margin-top:5px; font-size:.82rem; font-weight:600; padding:2px 9px; border-radius:999px; display:inline-block}
 
-        .banner-placeholder {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            height: 100%;
-        }
+.controls{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px;}
+.ctrl{padding:18px; display:flex; flex-direction:column; gap:10px;}
+.ctrl.auto-on{border-color:#9bd9ae; background:var(--leaf-soft);}
+.ctrl-top{display:flex; align-items:center; justify-content:space-between; gap:8px}
+.ctrl-top h3{margin:0; font-size:1rem; display:flex; align-items:center; gap:8px}
+.bulb{font-size:1.3rem; opacity:.35; filter:grayscale(1); transition:.25s}
+.bulb.on{opacity:1; filter:none; text-shadow:0 0 10px #facc15}
+.ctrl p.desc{margin:0; font-size:.84rem; color:var(--muted); line-height:1.4}
+.switch{position:relative; width:44px; height:24px; flex:none}
+.switch input{opacity:0; width:0; height:0}
+.slider{position:absolute; inset:0; background:#c9d4cc; border-radius:999px; cursor:pointer; transition:.2s}
+.slider::before{content:"";position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s}
+input:checked + .slider{background:var(--leaf)}
+input:checked + .slider::before{transform:translateX(20px)}
+select, .ctrl .api-input{
+  width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg); color:var(--ink); font-size:.86rem;
+}
+.btn{
+  border:none; border-radius:9px; padding:10px 14px; font-size:.88rem; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-primary{background:var(--sky); color:#fff;}
+.btn-primary:disabled{opacity:.65; cursor:wait;}
+.btn-ghost{background:var(--leaf-soft); color:var(--leaf-deep);}
+.spin{width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.5); border-top-color:#fff; animation:sp .7s linear infinite; display:none;}
+.loading .spin{display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-        /* Cuando tengas tu imagen, quita este cuadro y usa la etiqueta <img> */
-        .banner-img-slot {
-            border: 2px dashed rgba(255, 255, 255, 0.45);
-            background: rgba(255, 255, 255, 0.08);
-            padding: 10px 22px;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            color: #bbf7d0;
-            font-weight: 600;
-        }
+.monitor{padding:18px;}
+.m-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:4px;}
+.m-head h3{margin:0; font-size:1.05rem; display:flex; align-items:center; gap:8px}
+.m-head .sub{font-size:.78rem; color:var(--muted); margin:2px 0 14px}
+.spark{display:flex; align-items:flex-end; gap:4px; height:46px; margin:4px 0 14px;}
+.spark i{flex:1; background:var(--sky); opacity:.75; border-radius:3px 3px 0 0; min-height:3px}
+table{width:100%; border-collapse:collapse; font-size:.86rem;}
+thead th{
+  text-align:left; font-size:.72rem; letter-spacing:.03em; color:var(--muted); font-weight:600;
+  padding:8px 10px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface);
+}
+tbody{display:block; max-height:300px; overflow-y:auto;}
+thead, tbody tr{display:table; width:100%; table-layout:fixed;}
+td{padding:10px; border-bottom:1px solid var(--border); vertical-align:top;}
+tr:last-child td{border-bottom:none}
+.plant-cell{display:flex; align-items:center; gap:6px; font-weight:500}
+.badge{display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.8rem; font-weight:600;}
+.badge.high{background:var(--sky-soft); color:var(--sky);}
+.badge.mid{background:var(--amber-soft); color:var(--amber);}
+.badge.low{background:var(--red-soft); color:var(--red);}
+.badge.manual{background:var(--leaf-soft); color:var(--leaf-deep);}
+.badge.alert{background:var(--red-soft); color:var(--red);}
+.badge.offbulb{background:var(--border); color:var(--muted);}
+.when{line-height:1.3}
+.when .clock{color:var(--muted); font-size:.78rem}
 
-        .status-pill {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.overlay{position:fixed; inset:0; background:rgba(10,20,14,.45); display:none; align-items:center; justify-content:center; z-index:50; padding:16px;}
+.overlay.show{display:flex}
+.panel{background:var(--surface); border-radius:16px; max-width:420px; width:100%; padding:22px; box-shadow:var(--shadow);}
+.panel h3{margin:0 0 4px}
+.panel p.hint{margin:0 0 16px; font-size:.84rem; color:var(--muted)}
+.field{margin-bottom:14px}
+.field label{display:block; font-size:.82rem; font-weight:600; margin-bottom:5px}
+.panel-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:6px}
+.btn-text{background:none; color:var(--muted); border:none; cursor:pointer; font-size:.86rem;}
+.note{font-size:.78rem; background:var(--amber-soft); color:var(--amber); padding:8px 10px; border-radius:8px; margin-top:4px;}
 
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #4ade80;
-            box-shadow: 0 0 8px #4ade80;
-        }
-
-        .dot.offline {
-            background-color: #f87171;
-            box-shadow: 0 0 8px #f87171;
-        }
-
-        /* 2. CONTENEDOR PRINCIPAL SEGÚN TU BOCETO */
-        .main-workspace {
-            max-width: 1280px;
-            width: 100%;
-            margin: 28px auto;
-            padding: 0 24px;
-            display: grid;
-            /* Izquierda: ~42% para modelo 3D | Derecha: ~58% para botones y tabla */
-            grid-template-columns: 0.42fr 0.58fr;
-            gap: 24px;
-            align-items: stretch;
-        }
-
-        /* COLUMNA IZQUIERDA: ESPACIO PARA MODELO 3D */
-        .panel-3d {
-            background: var(--card);
-            border: 2px dashed var(--border);
-            border-radius: 18px;
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            text-align: center;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-            position: relative;
-        }
-
-        .panel-3d h3 {
-            color: var(--primary-dark);
-            font-size: 1.15rem;
-            margin-bottom: 8px;
-        }
-
-        .panel-3d p {
-            color: var(--muted);
-            font-size: 0.9rem;
-            max-width: 280px;
-            line-height: 1.5;
-        }
-
-        model-viewer {
-            width: 100%;
-            height: 100%;
-            min-height: 450px;
-            border-radius: 12px;
-        }
-
-        /* COLUMNA DERECHA: BOTONES ARRIBA + TABLA ABAJO */
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
-        /* Fila superior derecha: Los 2 botones */
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .mode-btn {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 22px 18px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .mode-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07);
-        }
-
-        .mode-btn .btn-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .mode-btn .btn-desc {
-            font-size: 0.85rem;
-            color: var(--muted);
-        }
-
-        /* Estado activo de cada botón */
-        .mode-btn.active-auto {
-            background: var(--primary-light);
-            border-color: var(--primary);
-        }
-
-        .mode-btn.active-auto .btn-title {
-            color: var(--primary-dark);
-        }
-
-        .mode-btn.active-manual {
-            background: var(--accent-light);
-            border-color: var(--accent);
-        }
-
-        .mode-btn.active-manual .btn-title {
-            color: #0369a1;
-        }
-
-        /* Caja inferior derecha: Tabla de monitoreo */
-        .table-card {
-            background: var(--card);
-            border-radius: 18px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-header {
-            padding: 16px 22px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-        }
-
-        .table-header h3 {
-            font-size: 1rem;
-            color: var(--text);
-        }
-
-        .btn-sync {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-sync:hover {
-            background: var(--primary-dark);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            max-height: 360px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            position: sticky;
-            top: 0;
-            background: #f8fafc;
-            padding: 12px 18px;
-            text-align: left;
-            font-size: 0.76rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        td {
-            padding: 13px 18px;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        tbody tr:hover {
-            background-color: #f0fdf4;
-        }
-
-        .badge-humedad {
-            background: var(--accent-light);
-            color: var(--accent);
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.84rem;
-            display: inline-block;
-        }
-
-        .fecha-dia {
-            font-weight: 600;
-            color: var(--text);
-            display: block;
-            text-transform: capitalize;
-        }
-
-        .fecha-hora {
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        /* Adaptable a celular */
-        @media (max-width: 860px) {
-            .main-workspace {
-                grid-template-columns: 1fr;
-            }
-            .panel-3d {
-                min-height: 300px;
-            }
-        }
-    </style>
+.toast{position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(140%); background:var(--leaf-deep); color:#fff; padding:10px 18px; border-radius:999px; font-size:.86rem; transition:.25s; z-index:60;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--muted); font-size:.78rem; padding:10px 20px 30px;}
+</style>
 </head>
 <body>
 
-    <!-- 1. BARRA SUPERIOR PARA IMAGEN -->
-    <header class="top-banner">
-        <div class="banner-placeholder">
-            <!-- Reemplaza este div por: <img src="tu-logo.png" alt="Logo" style="height: 60px;"> -->
-            <div class="banner-img-slot">🖼️ Espacio reservado para tu imagen / logo</div>
-            <span style="font-weight: 700; font-size: 1.15rem;">Sistema de Riego Inteligente</span>
+<header>
+  <div class="brand">
+    <div class="logo-slot">🖼️ Logo del vivero</div>
+    <div>
+      <h1>AquaSmart</h1>
+      <p>Riego, monitoreo y alertas de tus plantas en un solo panel</p>
+    </div>
+  </div>
+  <div class="head-actions">
+    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusTxt">Modo demostración</span></div>
+    <button class="gear" id="openSettings" title="Configurar conexión">⚙️</button>
+  </div>
+</header>
+
+<main>
+  <section class="viewer">
+    <div class="viewer-box">
+      <div class="ic">📦</div>
+      <h3>Visor 3D de la planta</h3>
+      <p>Espacio reservado para el modelo 3D de la planta o maceta (.glb / .gltf).</p>
+    </div>
+    <div class="card gauge-card">
+      <svg width="86" height="86" viewBox="0 0 86 86">
+        <circle cx="43" cy="43" r="36" fill="none" stroke="var(--border)" stroke-width="9"/>
+        <circle id="gaugeArc" cx="43" cy="43" r="36" fill="none" stroke="var(--sky)" stroke-width="9"
+          stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 43 43)"/>
+        <text id="gaugeNum" x="43" y="49" text-anchor="middle" font-size="19" font-weight="700" fill="var(--ink)">--</text>
+      </svg>
+      <div class="gauge-txt">
+        <h4>Humedad promedio</h4>
+        <div class="big" id="avgLabel">Cargando…</div>
+        <span class="state" id="healthState">Evaluando</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div class="controls">
+      <div class="card ctrl auto-on" id="autoCard">
+        <div class="ctrl-top">
+          <h3>🤖 Riego automático inteligente</h3>
+          <label class="switch"><input type="checkbox" id="autoToggle" checked><span class="slider"></span></label>
         </div>
-        <div class="status-pill">
-            <div class="dot" id="status-dot"></div>
-            <span id="status-text">Conectando...</span>
-        </div>
-    </header>
+        <p class="desc">Activa la bomba cuando la humedad baja del umbral configurado. Umbral actual: <strong id="thresholdLabel">35%</strong>.</p>
+      </div>
+      <div class="card ctrl">
+        <div class="ctrl-top"><h3>💧 Riego manual bajo control</h3></div>
+        <p class="desc">Envía la orden de riego inmediato a la planta elegida y lo registra en el historial.</p>
+        <select id="plantSelect">
+          <option>Planta Principal</option>
+          <option>Suculenta</option>
+          <option>Gus</option>
+        </select>
+        <button class="btn btn-primary" id="waterBtn"><span class="spin"></span><span id="waterLabel">Regar ahora</span></button>
+      </div>
+      <div class="card ctrl" id="focoCard">
+        <div class="ctrl-top"><h3>💡 Alerta de exceso de humedad</h3><span class="bulb" id="bulbIcon">💡</span></div>
+        <p class="desc">Si la humedad supera <strong id="maxLabel">75%</strong>, el foco se enciende solo para avisar que hay exceso de agua. También puedes encenderlo o apagarlo tú mismo.</p>
+        <button class="btn btn-ghost" id="focoBtn">Encender foco</button>
+      </div>
+    </div>
 
-    <!-- 2. ÁREA DIVIDIDA SEGÚN TU IMAGEN -->
-    <main class="main-workspace">
+    <div class="card monitor">
+      <div class="m-head">
+        <h3>📊 Historial y monitoreo de humedad</h3>
+        <button class="btn btn-ghost" id="refreshBtn">↻ Actualizar</button>
+      </div>
+      <p class="sub" id="syncSub">Se actualiza automáticamente cada 12 s · datos de demostración</p>
+      <div class="spark" id="spark"></div>
+      <table>
+        <thead><tr><th style="width:12%">ID</th><th style="width:26%">Planta</th><th style="width:30%">Humedad / Estado</th><th>Fecha y hora (México)</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
 
-        <!-- IZQUIERDA (Un poco menos de mitad de página): MODELO 3D -->
-        <section class="panel-3d" id="contenedor-3d">
-            <!-- Cuando tengas tu archivo .glb de Blender, descomenta la siguiente línea: -->
-            <!-- <model-viewer src="tu_modelo.glb" auto-rotate camera-controls shadow-intensity="1"></model-viewer> -->
-            <h3>🧊 Visor Modelo 3D</h3>
-            <p>Espacio listo para insertar tu modelo 3D de la planta o maceta (<code>.glb</code> / <code>.gltf</code>).</p>
-        </section>
+<footer>Próximamente: sincronización real con tu Raspberry Pi. Hoy la app funciona con datos simulados para que puedas probar el flujo completo.</footer>
 
-        <!-- DERECHA: BOTONES ARRIBA + TABLA DE HUMEDAD ABAJO -->
-        <div class="right-column">
+<div class="overlay" id="overlay">
+  <div class="panel">
+    <h3>Conexión con tu base de datos</h3>
+    <p class="hint">Cuando tu Raspberry Pi esté listo, pega aquí la URL de su API para que esta página lea los registros reales.</p>
+    <div class="field">
+      <label for="apiUrl">URL de la API</label>
+      <input class="api-input" id="apiUrl" placeholder="https://tu-raspberry.ejemplo.com/api">
+    </div>
+    <div class="field">
+      <label for="thresholdInput">Umbral de riego automático (%)</label>
+      <input class="api-input" id="thresholdInput" type="number" min="0" max="100" value="35">
+    </div>
+    <div class="field">
+      <label for="maxInput">Humedad máxima antes de encender el foco (%)</label>
+      <input class="api-input" id="maxInput" type="number" min="0" max="100" value="75">
+    </div>
+    <p class="note" id="connNote">Mientras no haya una URL conectada, se mostrarán datos simulados.</p>
+    <div class="panel-foot">
+      <button class="btn-text" id="closeSettings">Cancelar</button>
+      <button class="btn btn-primary" id="saveSettings">Guardar</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
-            <!-- DOS BOTONES DE RIEGO -->
-            <section class="controls-grid">
-                <button class="mode-btn active-auto" id="btn-auto" onclick="seleccionarModo('automatico')">
-                    <span class="btn-title">🤖 Riego Automático <span id="tag-auto">● Activo</span></span>
-                    <span class="btn-desc">Activa la bomba según el nivel de humedad del sensor.</span>
-                </button>
+<script>
+const PLANTS = ["Planta Principal","Suculenta","Gus"];
+let state = {apiUrl:"https://alexcalixto10000-pixel-github-io.onrender.com", threshold:35, maxThreshold:75, auto:true, focoOn:false, focoAuto:false, id:9, rows:[]};
+try{
+  const saved = JSON.parse(localStorage.getItem("riego_cfg")||"{}");
+  state.apiUrl = saved.apiUrl||""; state.threshold = saved.threshold||35;
+  state.maxThreshold = saved.maxThreshold||75; state.auto = saved.auto!==false;
+}catch(e){}
 
-                <button class="mode-btn" id="btn-manual" onclick="seleccionarModo('manual')">
-                    <span class="btn-title">💧 Riego Manual <span id="tag-manual"></span></span>
-                    <span class="btn-desc">Envía orden de riego inmediato y registra el ciclo.</span>
-                </button>
-            </section>
+const $ = s=>document.querySelector(s);
+const rowsEl=$("#rows"), sparkEl=$("#spark");
 
-            <!-- TABLA DE MONITOREO DE HUMEDAD -->
-            <section class="table-card">
-                <div class="table-header">
-                    <h3>🌱 Monitoreo de Humedad en Tiempo Real</h3>
-                    <button class="btn-sync" onclick="cargarDatos()">↻ Actualizar</button>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Planta</th>
-                                <th>Humedad / Estado</th>
-                                <th>Fecha y Hora (México)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-datos">
-                            <tr><td colspan="4" style="text-align:center; padding:30px; color:#64748b;">Cargando datos de Aiven...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+function fmtFecha(d){
+  const dias=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+  const meses=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const dia = dias[d.getDay()][0].toUpperCase()+dias[d.getDay()].slice(1);
+  let h=d.getHours(); const ampm = h>=12?"p.m.":"a.m."; h = h%12||12;
+  const mm = String(d.getMinutes()).padStart(2,"0"), ss=String(d.getSeconds()).padStart(2,"0");
+  return {
+    line: `${dia}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`,
+    clock: `${h}:${mm}:${ss} ${ampm}`
+  };
+}
 
-        </div>
-    </main>
+function badgeFor(r){
+  if(r.foco) return r.on
+    ? `<span class="badge alert">💡 Foco encendido ${r.auto?"· automático":"· manual"}</span>`
+    : `<span class="badge offbulb">💡 Foco apagado</span>`;
+  if(r.manual) return `<span class="badge manual">💧 Riego manual activado</span>`;
+  const cls = r.val<30?"low":r.val<60?"mid":"high";
+  return `<span class="badge ${cls}">💧 Humedad ${r.val}%</span>`;
+}
 
-    <script>
-        // ⚠️ PEGA AQUÍ TU URL DE RENDER (sin diagonal al final)
-        const API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com/";
+function addReading(plant, manual){
+  const val = manual? null : Math.round(20+Math.random()*78);
+  const d = new Date(); const f = fmtFecha(d);
+  state.rows.unshift({id:state.id++, plant, val, manual, line:f.line, clock:f.clock});
+  state.rows = state.rows.slice(0,40);
+  render();
+  if(!manual) maybeAutoFoco(val);
+}
 
-        function formatearFechaEspanol(fechaStr) {
-            if (!fechaStr) return { dia: "Sin fecha", hora: "" };
-            const fecha = new Date(fechaStr);
-            if (isNaN(fecha)) return { dia: fechaStr, hora: "" };
+function setFoco(on, auto){
+  state.focoOn = on;
+  $("#bulbIcon").classList.toggle("on", on);
+  $("#focoBtn").textContent = on? "Apagar foco":"Encender foco";
+  const d = new Date(); const f = fmtFecha(d);
+  state.rows.unshift({id:state.id++, plant:"Sistema", foco:true, on, auto, line:f.line, clock:f.clock});
+  state.rows = state.rows.slice(0,40);
+  render();
+}
 
-            return {
-                dia: fecha.toLocaleDateString("es-MX", {
-                    timeZone: "America/Mexico_City",
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                }),
-                hora: fecha.toLocaleTimeString("es-MX", {
-                    timeZone: "America/Mexico_City",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true
-                })
-            };
-        }
+function maybeAutoFoco(val){
+  if(val > state.maxThreshold && !state.focoOn){ state.focoAuto = true; setFoco(true, true); }
+  else if(val <= state.maxThreshold - 5 && state.focoOn && state.focoAuto){ state.focoAuto = false; setFoco(false, true); }
+}
 
-        function formatearValor(val) {
-            if (!val) return "--";
-            const texto = String(val).trim();
-            return /^\d+(\.\d+)?$/.test(texto) ? `${texto}%` : texto;
-        }
+function render(){
+  rowsEl.innerHTML = state.rows.slice(0,25).map(r=>`
+    <tr><td>#${r.id}</td>
+      <td class="plant-cell">${r.foco?"💡":"🌿"} ${r.plant}</td>
+      <td>${badgeFor(r)}</td>
+      <td class="when">${r.line}<div class="clock">🕒 ${r.clock}</div></td>
+    </tr>`).join("");
 
-        function cargarDatos() {
-            const dot = document.getElementById("status-dot");
-            const statusText = document.getElementById("status-text");
+  const recent = state.rows.filter(r=>!r.manual).slice(0,10).reverse();
+  sparkEl.innerHTML = recent.map(r=>`<i style="height:${Math.max(6,r.val)}%"></i>`).join("")
+    || "<i style='height:5%'></i>";
 
-            fetch(`${API_URL}/datos`)
-                .then(res => {
-                    if (!res.ok) throw new Error("Error HTTP");
-                    return res.json();
-                })
-                .then(data => {
-                    dot.classList.remove("offline");
-                    statusText.textContent = "Conectado · Aiven";
+  const vals = state.rows.filter(r=>!r.manual).slice(0,8).map(r=>r.val);
+  if(vals.length){
+    const avg = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+    $("#avgLabel").textContent = avg+"%";
+    $("#gaugeNum").textContent = avg+"%";
+    const off = 226 - (226*avg/100);
+    $("#gaugeArc").setAttribute("stroke-dashoffset", off);
+    $("#gaugeArc").setAttribute("stroke", avg<30?"var(--red)":avg<60?"var(--amber)":"var(--sky)");
+    const hs=$("#healthState");
+    if(avg<30){hs.textContent="Necesita agua"; hs.style.background="var(--red-soft)"; hs.style.color="var(--red)";}
+    else if(avg<60){hs.textContent="Vigilar"; hs.style.background="var(--amber-soft)"; hs.style.color="var(--amber)";}
+    else {hs.textContent="Saludable"; hs.style.background="var(--leaf-soft)"; hs.style.color="var(--leaf-deep)";}
+  }
+}
 
-                    const tbody = document.getElementById("tabla-datos");
-                    if (!data || data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:#64748b;">Sin lecturas registradas aún.</td></tr>`;
-                        return;
-                    }
+function setStatus(){
+  const connected = !!state.apiUrl;
+  $("#statusDot").className = "dot "+(connected?"ok":"");
+  $("#statusTxt").textContent = connected? "Conectado · tu API" : "Modo demostración";
+  $("#syncSub").textContent = "Se actualiza automáticamente cada 12 s · "+(connected? "intentando leer tu API" : "datos de demostración");
+}
 
-                    const ordenados = [...data].sort((a, b) => b.id - a.id);
-                    tbody.innerHTML = "";
+async function pullFromApi(){
+  if(!state.apiUrl) return false;
+  try{
+    const res = await fetch(state.apiUrl.replace(/\/$/,"")+"/lecturas", {signal: AbortSignal.timeout(4000)});
+    if(!res.ok) throw new Error("bad response");
+    const data = await res.json();
+    return Array.isArray(data) && data.length>0;
+  }catch(e){ return false; }
+}
 
-                    ordenados.forEach(fila => {
-                        const f = formatearFechaEspanol(fila.fecha);
-                        tbody.innerHTML += `
-                            <tr>
-                                <td><strong>#${fila.id}</strong></td>
-                                <td style="text-transform: capitalize; font-weight: 600;">🌿 ${fila.nombre}</td>
-                                <td><span class="badge-humedad">💧 ${formatearValor(fila.valor)}</span></td>
-                                <td>
-                                    <span class="fecha-dia">${f.dia}</span>
-                                    <span class="fecha-hora">🕒 ${f.hora}</span>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                })
-                .catch(() => {
-                    dot.classList.add("offline");
-                    statusText.textContent = "Despertando servidor...";
-                });
-        }
+async function tick(){
+  const ok = await pullFromApi();
+  $("#statusDot").className = "dot "+(state.apiUrl ? (ok?"ok":"off") : "");
+  $("#statusTxt").textContent = state.apiUrl ? (ok? "Conectado · tu API" : "Sin respuesta · usando demo") : "Modo demostración";
+  if(!ok){ addReading(PLANTS[Math.floor(Math.random()*PLANTS.length)], false); }
+}
 
-        function seleccionarModo(modo) {
-            const btnAuto = document.getElementById("btn-auto");
-            const btnManual = document.getElementById("btn-manual");
-            const tagAuto = document.getElementById("tag-auto");
-            const tagManual = document.getElementById("tag-manual");
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
 
-            if (modo === "automatico") {
-                btnAuto.classList.add("active-auto");
-                btnManual.classList.remove("active-manual");
-                tagAuto.textContent = "● Activo";
-                tagManual.textContent = "";
-            } else {
-                btnManual.classList.add("active-manual");
-                btnAuto.classList.remove("active-auto");
-                tagManual.textContent = "● Activado";
-                tagAuto.textContent = "";
+// init
+for(let i=0;i<5;i++) addReading(PLANTS[i%3], false);
+setStatus(); render();
+setInterval(tick, 12000);
 
-                // Registra en Aiven que se activó el riego manual
-                fetch(`${API_URL}/guardar`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        nombre: "Planta Principal",
-                        valor: "Riego Manual Activado"
-                    })
-                })
-                .then(res => res.json())
-                .then(() => cargarDatos())
-                .catch(err => console.error(err));
-            }
-        }
+$("#refreshBtn").onclick = ()=>{ tick(); toast("Lecturas actualizadas"); };
 
-        cargarDatos();
-        // Actualización automática cada 10 segundos para reflejar nuevas lecturas
-        setInterval(cargarDatos, 10000);
-    </script>
+$("#autoToggle").onchange = e=>{
+  state.auto = e.target.checked;
+  $("#autoCard").classList.toggle("auto-on", state.auto);
+  toast(state.auto? "Riego automático activado":"Riego automático desactivado");
+  persist();
+};
 
+$("#waterBtn").onclick = ()=>{
+  const btn=$("#waterBtn"), label=$("#waterLabel");
+  btn.classList.add("loading"); btn.disabled=true; label.textContent="Enviando orden…";
+  setTimeout(()=>{
+    addReading($("#plantSelect").value, true);
+    btn.classList.remove("loading"); btn.disabled=false; label.textContent="Regar ahora";
+    toast("Riego manual enviado a "+$("#plantSelect").value);
+  }, 1100);
+};
+
+$("#openSettings").onclick = ()=>{
+  $("#apiUrl").value = state.apiUrl; $("#thresholdInput").value = state.threshold; $("#maxInput").value = state.maxThreshold;
+  $("#overlay").classList.add("show");
+};
+$("#closeSettings").onclick = ()=> $("#overlay").classList.remove("show");
+$("#saveSettings").onclick = ()=>{
+  state.apiUrl = $("#apiUrl").value.trim();
+  state.threshold = Number($("#thresholdInput").value)||35;
+  state.maxThreshold = Number($("#maxInput").value)||75;
+  $("#thresholdLabel").textContent = state.threshold+"%";
+  $("#maxLabel").textContent = state.maxThreshold+"%";
+  persist(); setStatus();
+  $("#overlay").classList.remove("show");
+  toast("Configuración guardada");
+};
+$("#focoBtn").onclick = ()=>{
+  state.focoAuto = false;
+  setFoco(!state.focoOn, false);
+  toast(state.focoOn? "Foco encendido manualmente":"Foco apagado manualmente");
+};
+function persist(){
+  try{ localStorage.setItem("riego_cfg", JSON.stringify({apiUrl:state.apiUrl, threshold:state.threshold, maxThreshold:state.maxThreshold, auto:state.auto})); }catch(e){}
+}
+$("#thresholdLabel").textContent = state.threshold+"%";
+$("#maxLabel").textContent = state.maxThreshold+"%";
+$("#autoToggle").checked = state.auto;
+$("#autoCard").classList.toggle("auto-on", state.auto);
+</script>
 </body>
 </html>
