@@ -12,7 +12,7 @@ def conectar():
         port=int(os.environ.get("DB_PORT", 3306)),
         user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME", "defaultdb"),
+        database=os.environ.get("DB_NAME", "plantas_db"),
         ssl_disabled=False,
         connection_timeout=10  # Evita que Gunicorn se congele si Aiven tarda
     )
