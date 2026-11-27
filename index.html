@@ -4,49 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AquaSmart · TESOEM Grupo 5S2</title>
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 <style>
 :root{
-  --bg:#f6faf7;
-  --surface:#ffffff;
-  --surface-alt:#fbfdfb;
-  --ink:#1e2f25;
-  --muted:#687c70;
-  --leaf:#2d7a4f;
-  --leaf-light:#4da172;
-  --leaf-deep:#1d5436;
-  --leaf-soft:#eaf5ee;
-  --sage-border:#cfe3d6;
-  --gold:#d49a1a;
-  --gold-soft:#fef8e7;
-  --sky:#2b7de9;
-  --sky-soft:#ebf3fe;
-  --amber:#c26d18;
-  --amber-soft:#fef3e2;
-  --red:#c93b3b;
-  --red-soft:#fdecec;
+  --bg:#f6faf7; --surface:#ffffff; --surface-alt:#fbfdfb;
+  --ink:#1e2f25; --muted:#687c70;
+  --leaf:#2d7a4f; --leaf-light:#4da172; --leaf-deep:#1d5436; --leaf-soft:#eaf5ee;
+  --sage-border:#cfe3d6; --gold:#d49a1a; --gold-soft:#fef8e7;
+  --sky:#2b7de9; --sky-soft:#ebf3fe; --amber:#c26d18; --amber-soft:#fef3e2;
+  --red:#c93b3b; --red-soft:#fdecec;
   --shadow:0 4px 20px rgba(34, 78, 52, 0.045), 0 1px 3px rgba(34, 78, 52, 0.03);
   color-scheme:light;
 }
 :root[data-theme="dark"]{
-  --bg:#101914;
-  --surface:#17241d;
-  --surface-alt:#1b2a22;
-  --ink:#e9f2ec;
-  --muted:#98aea1;
-  --leaf:#4da172;
-  --leaf-light:#6bc291;
-  --leaf-deep:#a7e3c0;
-  --leaf-soft:#1d3327;
-  --sage-border:#283f33;
-  --gold:#eab308;
-  --gold-soft:#2d2614;
-  --sky:#60a5fa;
-  --sky-soft:#19283d;
-  --amber:#fbbf24;
-  --amber-soft:#2e2414;
-  --red:#f87171;
-  --red-soft:#301b1b;
+  --bg:#101914; --surface:#17241d; --surface-alt:#1b2a22;
+  --ink:#e9f2ec; --muted:#98aea1;
+  --leaf:#4da172; --leaf-light:#6bc291; --leaf-deep:#a7e3c0; --leaf-soft:#1d3327;
+  --sage-border:#283f33; --gold:#eab308; --gold-soft:#2d2614;
+  --sky:#60a5fa; --sky-soft:#19283d; --amber:#fbbf24; --amber-soft:#2e2414;
+  --red:#f87171; --red-soft:#301b1b;
   --shadow:0 6px 22px rgba(0, 0, 0, 0.28);
   color-scheme:dark;
 }
@@ -58,247 +33,174 @@ body{
                    radial-gradient(circle at 88% 85%, rgba(43,125,233,0.05) 0%, transparent 40%);
   color:var(--ink);
   font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
   line-height:1.45;
 }
-
-/* HEADER MINIMALISTA LUMINOSO */
 header{
   position:sticky; top:0; z-index:15;
-  background:rgba(255, 255, 255, 0.88);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  color:var(--ink);
-  padding:14px 24px;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:14px; flex-wrap:wrap;
-  border-bottom:1.5px solid var(--sage-border);
+  background:rgba(255, 255, 255, 0.9); backdrop-filter:blur(12px);
+  padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+  gap:14px; flex-wrap:wrap; border-bottom:1.5px solid var(--sage-border);
 }
-:root[data-theme="dark"] header{background:rgba(23, 36, 29, 0.88);}
-
+:root[data-theme="dark"] header{background:rgba(23, 36, 29, 0.9);}
 .brand{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
 .tesoem-crest{
-  display:flex; align-items:center; gap:10px;
-  background:var(--leaf-soft);
-  border:1px solid var(--sage-border);
-  border-radius:14px 4px 14px 4px;
-  padding:6px 13px;
+  display:flex; align-items:center; gap:10px; background:var(--leaf-soft);
+  border:1px solid var(--sage-border); border-radius:14px 4px 14px 4px; padding:6px 13px;
 }
 .crest-meta{display:flex; flex-direction:column; line-height:1.15}
 .crest-meta span{font-size:.66rem; font-weight:800; letter-spacing:.9px; color:var(--leaf); text-transform:uppercase}
-.crest-meta strong{font-size:.9rem; color:var(--ink)}
-.brand h1{margin:0; font-size:1.32rem; font-weight:700; letter-spacing:-.2px; display:flex; align-items:center; gap:8px; color:var(--ink)}
+.crest-meta strong{font-size:.9rem}
+.brand h1{margin:0; font-size:1.32rem; display:flex; align-items:center; gap:8px}
 .tag-5s2{background:var(--gold-soft); color:#9a6b06; border:1px solid #f3d98b; font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px}
 :root[data-theme="dark"] .tag-5s2{color:#fde047; border-color:#574618}
 .brand p{margin:2px 0 0; font-size:.78rem; color:var(--muted)}
 
 .head-actions{display:flex; align-items:center; gap:8px}
 .status-pill{
-  display:flex; align-items:center; gap:7px;
-  background:var(--surface-alt); border:1px solid var(--sage-border);
-  padding:7px 14px; border-radius:999px; font-size:.82rem; font-weight:500; color:var(--ink);
+  display:flex; align-items:center; gap:7px; background:var(--surface-alt);
+  border:1px solid var(--sage-border); padding:7px 14px; border-radius:999px; font-size:.82rem; font-weight:500;
 }
 .dot{width:8px; height:8px; border-radius:50%; background:#eab308}
 .dot.ok{background:#22c55e; box-shadow:0 0 8px rgba(34,197,94,.55)}
 .dot.off{background:#ef4444}
 .icon-btn{
   background:var(--surface-alt); border:1px solid var(--sage-border); color:var(--ink);
-  width:38px; height:38px; border-radius:12px; cursor:pointer; font-size:1rem;
-  display:grid; place-items:center; transition:.2s;
+  width:38px; height:38px; border-radius:12px; cursor:pointer; font-size:1rem; display:grid; place-items:center;
 }
-.icon-btn:hover{background:var(--leaf-soft); border-color:var(--leaf-light)}
+.icon-btn:hover{background:var(--leaf-soft)}
 
-/* LAYOUT PRINCIPAL */
-main{max-width:1280px; margin:0 auto; padding:26px 22px 64px; display:grid; grid-template-columns:1fr 1.5fr; gap:24px;}
-@media (max-width:880px){ main{grid-template-columns:1fr;} }
+main{max-width:1300px; margin:0 auto; padding:24px 20px 60px; display:grid; grid-template-columns:1fr 1.65fr; gap:22px;}
+@media (max-width:920px){ main{grid-template-columns:1fr;} }
 
-.card{
-  background:var(--surface);
-  border:1px solid var(--sage-border);
-  border-radius:18px;
-  box-shadow:var(--shadow);
-}
+.card{background:var(--surface); border:1px solid var(--sage-border); border-radius:18px; box-shadow:var(--shadow);}
 .viewer{display:flex; flex-direction:column; gap:18px;}
 
-/* VISOR 3D MINIMALISTA */
 .viewer-box{
-  border:1px solid var(--sage-border);
-  border-radius:22px 8px 22px 8px;
-  min-height:385px;
+  border:1px solid var(--sage-border); border-radius:22px 8px 22px 8px; min-height:360px;
   display:flex; flex-direction:column; align-items:center; justify-content:space-between; text-align:center;
-  padding:20px 22px;
-  background:linear-gradient(180deg, #ffffff 0%, var(--leaf-soft) 100%);
-  box-shadow:var(--shadow); position:relative; overflow:hidden;
+  padding:20px; background:linear-gradient(180deg, var(--surface) 0%, var(--leaf-soft) 100%);
+  box-shadow:var(--shadow);
 }
-:root[data-theme="dark"] .viewer-box{background:linear-gradient(180deg, var(--surface) 0%, #13221a 100%);}
-
-.viewer-top{
-  width:100%; display:flex; justify-content:space-between; align-items:center;
-  font-size:.74rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;
-}
+.viewer-top{width:100%; display:flex; justify-content:space-between; align-items:center; font-size:.74rem; font-weight:700; color:var(--muted); text-transform:uppercase;}
 .chip-hw{background:var(--surface); color:var(--leaf); border:1px solid var(--sage-border); padding:4px 10px; border-radius:999px}
-.iso-scene{width:100%; max-width:315px; margin:6px auto; transition:transform .35s ease;}
-.iso-scene:hover{transform:translateY(-4px) scale(1.02)}
+.iso-scene{width:100%; max-width:310px; margin:6px auto;}
 .water-drops{opacity:0; transition:opacity .25s ease;}
 .watering .water-drops{opacity:1; animation:dropPulse .7s infinite alternate;}
 @keyframes dropPulse{from{opacity:.45; transform:translateY(-2px)}to{opacity:1; transform:translateY(3px)}}
-.viewer-box h3{margin:0; font-size:1.04rem; color:var(--ink)}
-.viewer-box p{margin:4px 0 0; color:var(--muted); font-size:.82rem; max-width:300px}
 
-.gauge-card{padding:22px; display:flex; align-items:center; gap:20px;}
-.gauge-card svg{flex:none}
+.sensors-strip{
+  width:100%; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;
+}
+.sensor-pill{
+  background:var(--surface); border:1px solid var(--sage-border); border-radius:12px;
+  padding:8px 12px; display:flex; flex-direction:column; align-items:center;
+}
+.sensor-pill span{font-size:.72rem; color:var(--muted); font-weight:600}
+.sensor-pill strong{font-size:1.1rem; color:var(--leaf-deep)}
+
+.gauge-card{padding:20px; display:flex; align-items:center; gap:18px;}
 .gauge-txt h4{margin:0 0 3px; font-size:.84rem; color:var(--muted); font-weight:600}
-.gauge-txt .big{font-size:2rem; font-weight:700; line-height:1; color:var(--ink)}
+.gauge-txt .big{font-size:2rem; font-weight:700; line-height:1}
 .gauge-txt .state{margin-top:6px; font-size:.8rem; font-weight:600; padding:3px 11px; border-radius:999px; display:inline-block}
 
-/* TARJETAS DE CONTROL */
-.controls{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;}
-.ctrl{padding:20px; display:flex; flex-direction:column; gap:11px; transition:border-color .2s, background .2s;}
+.controls{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;}
+.ctrl{padding:18px; display:flex; flex-direction:column; gap:10px;}
 .ctrl.auto-on{border-color:#98cbb0; background:linear-gradient(180deg, var(--surface) 0%, var(--leaf-soft) 100%);}
 .ctrl-top{display:flex; align-items:center; justify-content:space-between; gap:8px}
-.ctrl-top h3{margin:0; font-size:.98rem; font-weight:600; display:flex; align-items:center; gap:8px}
-.bulb{font-size:1.25rem; opacity:.35; filter:grayscale(1); transition:.25s}
+.ctrl-top h3{margin:0; font-size:.98rem; display:flex; align-items:center; gap:8px}
+.bulb{font-size:1.3rem; opacity:.35; filter:grayscale(1); transition:.25s}
 .bulb.on{opacity:1; filter:none; text-shadow:0 0 12px #facc15}
-.ctrl p.desc{margin:0; font-size:.84rem; color:var(--muted); line-height:1.45}
+.ctrl p.desc{margin:0; font-size:.83rem; color:var(--muted); line-height:1.4}
 
 .switch{position:relative; width:44px; height:24px; flex:none}
 .switch input{opacity:0; width:0; height:0}
 .slider{position:absolute; inset:0; background:#d5e2da; border-radius:999px; cursor:pointer; transition:.2s}
-.slider::before{content:"";position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.slider::before{content:"";position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s}
 input:checked + .slider{background:var(--leaf)}
 input:checked + .slider::before{transform:translateX(20px)}
 
-select, .api-input{
-  width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--sage-border);
-  background:var(--surface-alt); color:var(--ink); font-size:.86rem; outline:none; transition:border-color .2s;
-}
-select:focus, .api-input:focus{border-color:var(--leaf)}
-
 .btn{
-  border:none; border-radius:11px; padding:10px 15px; font-size:.87rem; font-weight:600;
+  border:none; border-radius:11px; padding:10px 14px; font-size:.86rem; font-weight:600;
   cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:.2s;
 }
 .btn-primary{background:var(--leaf); color:#fff;}
 .btn-primary:hover{background:var(--leaf-deep);}
-.btn-primary:disabled{opacity:.65; cursor:wait;}
-.btn-ghost{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid transparent;}
-.btn-ghost:hover{border-color:var(--sage-border);}
-.spin{width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.5); border-top-color:#fff; animation:sp .7s linear infinite; display:none;}
-.loading .spin{display:inline-block}
-@keyframes sp{to{transform:rotate(360deg)}}
+.btn-danger{background:var(--red); color:#fff;}
+.btn-amber{background:var(--amber); color:#fff;}
+.btn-ghost{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border);}
 
-/* MONITOREO Y TABLA CON MARCO BOTÁNICO */
-.monitor{padding:22px; position:relative;}
-.m-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:2px;}
-.m-head h3{margin:0; font-size:1.06rem; display:flex; align-items:center; gap:8px}
-.sub{font-size:.78rem; color:var(--muted); margin:2px 0 14px}
-.spark{display:flex; align-items:flex-end; gap:5px; height:44px; margin:4px 0 18px; padding:0 4px;}
-.spark i{flex:1; background:linear-gradient(180deg, var(--leaf-light), #93d3b0); border-radius:5px 5px 2px 2px; min-height:4px; transition:height .3s}
+/* TABLAS CON MARCO BOTÁNICO */
+.monitor{padding:20px;}
+.m-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:4px;}
+.m-head h3{margin:0; font-size:1.03rem; display:flex; align-items:center; gap:8px}
+.sub{font-size:.78rem; color:var(--muted); margin:0 0 12px}
 
-/* Contenedor con bordes orgánicos de hojas */
 .botanical-table-wrap{
-  position:relative;
-  border:1.5px solid var(--sage-border);
-  border-radius:22px 6px 22px 6px;
-  background:var(--surface);
-  overflow:hidden;
-  box-shadow:inset 0 0 0 3px var(--surface-alt);
+  position:relative; border:1.5px solid var(--sage-border);
+  border-radius:20px 6px 20px 6px; background:var(--surface); overflow:hidden;
 }
-/* Ramitas decorativas en las esquinas de la tabla */
-.vine-corner{
-  position:absolute;
-  pointer-events:none;
-  z-index:3;
-  color:var(--leaf-light);
-  opacity:.72;
-}
+.vine-corner{position:absolute; pointer-events:none; z-index:3; color:var(--leaf-light); opacity:.7;}
 .vine-tr{top:-2px; right:-2px;}
 .vine-bl{bottom:-2px; left:-2px; transform:rotate(180deg);}
-
-/* Cenefa botánica minimalista bajo el encabezado de la tabla */
 .vine-divider{
-  height:10px;
-  width:100%;
-  background-color:var(--leaf-soft);
+  height:9px; width:100%; background-color:var(--leaf-soft);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='10' viewBox='0 0 48 10'%3E%3Cpath d='M0 5 Q12 5 24 5 T48 5' stroke='%2398cbb0' stroke-width='1' fill='none'/%3E%3Cpath d='M14 5 C16 1.5, 20 1.5, 22 5 C20 5.5, 16 5.5, 14 5 Z' fill='%234da172' fill-opacity='0.55'/%3E%3Cpath d='M34 5 C36 8.5, 40 8.5, 42 5 C40 4.5, 36 4.5, 34 5 Z' fill='%234da172' fill-opacity='0.55'/%3E%3C/svg%3E");
-  background-repeat:repeat-x;
   border-bottom:1px solid var(--sage-border);
 }
-
-table{width:100%; border-collapse:collapse; font-size:.86rem;}
+table{width:100%; border-collapse:collapse; font-size:.85rem;}
 thead th{
-  text-align:left; font-size:.73rem; letter-spacing:.04em; color:var(--leaf-deep); font-weight:700;
-  padding:12px 14px; background:var(--leaf-soft); text-transform:uppercase;
+  text-align:left; font-size:.72rem; letter-spacing:.04em; color:var(--leaf-deep); font-weight:700;
+  padding:11px 13px; background:var(--leaf-soft); text-transform:uppercase;
 }
-tbody{display:block; max-height:295px; overflow-y:auto;}
+tbody{display:block; max-height:220px; overflow-y:auto;}
 thead, tbody tr{display:table; width:100%; table-layout:fixed;}
-tbody tr{transition:background .15s;}
 tbody tr:hover{background:var(--leaf-soft);}
-td{padding:11px 14px; border-bottom:1px dashed var(--sage-border); vertical-align:middle;}
+td{padding:10px 13px; border-bottom:1px dashed var(--sage-border); vertical-align:middle;}
 tr:last-child td{border-bottom:none}
 
-.plant-cell{display:flex; align-items:center; gap:7px; font-weight:600; text-transform:capitalize; color:var(--ink)}
-.badge{display:inline-flex; align-items:center; gap:5px; padding:4px 11px; border-radius:999px; font-size:.79rem; font-weight:600;}
-.badge.high{background:var(--sky-soft); color:var(--sky);}
-.badge.mid{background:var(--amber-soft); color:var(--amber);}
-.badge.low{background:var(--red-soft); color:var(--red);}
-.badge.manual{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border);}
-.badge.alert{background:var(--red-soft); color:var(--red);}
-.badge.offbulb{background:var(--surface-alt); color:var(--muted); border:1px solid var(--sage-border);}
-.when{line-height:1.35; font-size:.83rem}
-.when .clock{color:var(--muted); font-size:.76rem}
+.badge{display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:.78rem; font-weight:600;}
+.badge.sky{background:var(--sky-soft); color:var(--sky);}
+.badge.amber{background:var(--amber-soft); color:var(--amber);}
+.badge.red{background:var(--red-soft); color:var(--red);}
+.badge.leaf{background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border);}
+.when{line-height:1.3; font-size:.82rem}
+.when .clock{color:var(--muted); font-size:.75rem}
 
-/* MODAL DE CONFIGURACIÓN */
 .overlay{position:fixed; inset:0; background:rgba(20,38,28,.35); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:50; padding:16px;}
 .overlay.show{display:flex}
-.panel{background:var(--surface); border:1px solid var(--sage-border); border-radius:20px; max-width:420px; width:100%; padding:24px; box-shadow:var(--shadow);}
-.panel h3{margin:0 0 4px}
-.panel p.hint{margin:0 0 16px; font-size:.84rem; color:var(--muted)}
+.panel{background:var(--surface); border:1px solid var(--sage-border); border-radius:20px; max-width:420px; width:100%; padding:24px;}
 .field{margin-bottom:14px}
 .field label{display:block; font-size:.82rem; font-weight:600; margin-bottom:5px}
-.panel-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:8px}
-.btn-text{background:none; color:var(--muted); border:none; cursor:pointer; font-size:.86rem; padding:8px 12px;}
-.note{font-size:.78rem; background:var(--leaf-soft); color:var(--leaf-deep); border:1px solid var(--sage-border); padding:9px 11px; border-radius:10px; margin-top:4px;}
-
-.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(140%); background:var(--leaf-deep); color:#fff; padding:10px 20px; border-radius:999px; font-size:.85rem; box-shadow:0 6px 16px rgba(0,0,0,.15); transition:.25s; z-index:60;}
-:root[data-theme="dark"] .toast{background:#2d7a4f;}
+.api-input{width:100%; padding:9px 12px; border-radius:10px; border:1px solid var(--sage-border); background:var(--surface-alt); color:var(--ink);}
+.panel-foot{display:flex; justify-content:flex-end; gap:8px; margin-top:10px}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(140%); background:var(--leaf-deep); color:#fff; padding:10px 20px; border-radius:999px; font-size:.85rem; transition:.25s; z-index:60;}
 .toast.show{transform:translateX(-50%) translateY(0);}
-footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px 32px; line-height:1.55;}
+footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px 32px;}
 </style>
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <!-- EMBLEMA MINIMALISTA TESOEM · GRUPO 5S2 -->
-    <div class="tesoem-crest" title="Tecnológico de Estudios Superiores del Oriente del Estado de México">
-      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 5L54 15.5V34.5C54 46.8 44.2 54.8 32 58.5C19.8 54.8 10 46.8 10 34.5V15.5L32 5Z" fill="#ffffff" stroke="#2d7a4f" stroke-width="2.8"/>
+    <div class="tesoem-crest">
+      <svg width="38" height="38" viewBox="0 0 64 64" fill="none">
+        <path d="M32 5L54 15.5V34.5C54 46.8 44.2 54.8 32 58.5C19.8 54.8 10 46.8 10 34.5V15.5L32 5Z" fill="#fff" stroke="#2d7a4f" stroke-width="2.8"/>
         <path d="M18 23H24.5L27 26.5M46 23H39.5L37 26.5M21 42H27.5L32 37.5L36.5 42H43" stroke="#4da172" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="18" cy="23" r="2.2" fill="#d49a1a"/>
-        <circle cx="46" cy="23" r="2.2" fill="#d49a1a"/>
         <path d="M32 14.5C32 14.5 25 22.8 25 28.2C25 32.1 28.1 35.2 32 35.2C35.9 35.2 39 32.1 39 28.2C39 22.8 32 14.5 32 14.5Z" fill="#ebf3fe" stroke="#2b7de9" stroke-width="2"/>
-        <path d="M32 32V23M32 26.5C32 26.5 28.5 25.5 27.5 23C30 23 32 24.8 32 26.5ZM32 25C32 25 35.5 24 36.5 21.5C34 21.5 32 23.2 32 25Z" stroke="#2d7a4f" stroke-width="2" stroke-linecap="round"/>
         <rect x="16" y="45" width="32" height="9.5" rx="4" fill="#2d7a4f"/>
-        <text x="32" y="51.8" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="6.8" font-weight="800" fill="#ffffff">TESOEM</text>
+        <text x="32" y="51.8" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="6.8" font-weight="800" fill="#fff">TESOEM</text>
       </svg>
-      <div class="crest-meta">
-        <span>TESOEM · ISC</span>
-        <strong>Grupo 5S2</strong>
-      </div>
+      <div class="crest-meta"><span>TESOEM · ISC</span><strong>Grupo 5S2</strong></div>
     </div>
-
     <div>
-      <h1>AquaSmart <span class="tag-5s2">5S2 · Botánica IoT</span></h1>
-      <p>Tecnológico de Estudios Superiores del Oriente del Estado de México · Riego Automatizado</p>
+      <h1>AquaSmart <span class="tag-5s2">5S2 · Control Remoto IoT</span></h1>
+      <p>Telemetría bidireccional Raspberry Pi Pico WH · Aiven MySQL</p>
     </div>
   </div>
-
   <div class="head-actions">
-    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusTxt">Modo demostración</span></div>
-    <button class="icon-btn" id="themeBtn" title="Alternar modo claro / oscuro">🌓</button>
-    <button class="icon-btn" id="openSettings" title="Configurar conexión">⚙️</button>
+    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusTxt">Conectando...</span></div>
+    <button class="icon-btn" id="themeBtn" title="Tema claro/oscuro">🌓</button>
+    <button class="icon-btn" id="openSettings" title="Configurar conexión y umbrales">⚙️</button>
   </div>
 </header>
 
@@ -306,148 +208,125 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
   <section class="viewer">
     <div class="viewer-box" id="viewerStage">
       <div class="viewer-top">
-        <span>Nodo de Telemetría · 5S2</span>
-        <span class="chip-hw">Pico WH + Sensor</span>
+        <span>Nodo Físico · Pico WH</span>
+        <span class="chip-hw" id="hwStateBadge">En espera</span>
       </div>
 
-      <!-- MAQUETA 3D ISOMÉTRICA LUMINOSA -->
-      <svg class="iso-scene" viewBox="0 0 320 245" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="160,232 32,168 160,104 288,168" fill="#2d7a4f" fill-opacity="0.09" stroke="#4da172" stroke-width="1.5" stroke-dasharray="4 4"/>
-        
-        <!-- Placa Raspberry Pi Pico WH -->
-        <g transform="translate(44, 136)">
+      <!-- Maqueta 3D Isométrica -->
+      <svg class="iso-scene" viewBox="0 0 320 235" fill="none">
+        <polygon points="160,224 32,160 160,96 288,160" fill="#2d7a4f" fill-opacity="0.09" stroke="#4da172" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <!-- Pico WH -->
+        <g transform="translate(44, 128)">
           <polygon points="34,0 68,17 34,34 0,17" fill="#2d7a4f" stroke="#86efac" stroke-width="1.5"/>
           <polygon points="0,17 34,34 34,40 0,23" fill="#1d5436"/>
           <polygon points="34,34 68,17 68,23 34,40" fill="#246842"/>
-          <polygon points="34,11 44,16 34,21 24,16" fill="#334155"/>
-          <polygon points="48,14 58,19 51,23 41,18" fill="#e2e8f0"/>
-          <circle id="picoLed" cx="22" cy="14" r="3.2" fill="#4ade80"/>
+          <circle id="picoLed" cx="22" cy="14" r="3.5" fill="#4ade80"/>
         </g>
-
-        <!-- Tanque de agua -->
-        <g transform="translate(212, 114)">
-          <ellipse cx="28" cy="48" rx="24" ry="12" fill="#2b7de9" fill-opacity="0.18" stroke="#2b7de9" stroke-width="1.5"/>
-          <path d="M4 16V48C4 54.6 14.7 60 28 60C41.3 60 52 54.6 52 48V16" fill="#60a5fa" fill-opacity="0.16" stroke="#2b7de9" stroke-width="1.5"/>
-          <ellipse cx="28" cy="24" rx="23" ry="11" fill="#60a5fa" fill-opacity="0.35"/>
-          <ellipse cx="28" cy="16" rx="24" ry="12" fill="#eff6ff" fill-opacity="0.7" stroke="#2b7de9" stroke-width="1.5"/>
+        <!-- Tanque -->
+        <g transform="translate(212, 106)">
+          <path d="M4 16V48C4 54.6 14.7 60 28 60C41.3 60 52 54.6 52 48V16" fill="#60a5fa" fill-opacity="0.18" stroke="#2b7de9" stroke-width="1.5"/>
+          <ellipse cx="28" cy="16" rx="24" ry="12" fill="#eff6ff" stroke="#2b7de9" stroke-width="1.5"/>
         </g>
-
-        <!-- Línea de riego y gotas -->
-        <path d="M216 146 C190 130, 185 88, 168 94" stroke="#2b7de9" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M216 138 C190 122, 185 82, 168 88" stroke="#2b7de9" stroke-width="3.5" stroke-linecap="round"/>
         <g class="water-drops">
-          <circle cx="163" cy="103" r="3" fill="#38bdf8"/>
-          <circle cx="157" cy="112" r="2.5" fill="#2b7de9"/>
-          <circle cx="167" cy="115" r="2.5" fill="#38bdf8"/>
+          <circle cx="163" cy="97" r="3" fill="#38bdf8"/>
+          <circle cx="157" cy="106" r="2.5" fill="#2b7de9"/>
         </g>
-
-        <!-- Maceta central -->
-        <g transform="translate(112, 92)">
+        <!-- Maceta -->
+        <g transform="translate(112, 84)">
           <path d="M12 36 L22 86 C22 93 74 93 74 86 L84 36 Z" fill="#c97a3a"/>
-          <path d="M48 36 L48 91 C63 91 74 89 74 86 L84 36 Z" fill="#b36527"/>
           <ellipse cx="48" cy="36" rx="38" ry="15" fill="#df9352"/>
           <ellipse cx="48" cy="36" rx="32" ry="11" fill="#5c4332"/>
-          <g transform="translate(60, 14)">
-            <rect x="0" y="0" width="8" height="22" rx="1.5" fill="#334155" stroke="#eab308" stroke-width="1"/>
-            <line x1="2.5" y1="22" x2="2.5" y2="30" stroke="#eab308" stroke-width="1.5"/>
-            <line x1="5.5" y1="22" x2="5.5" y2="30" stroke="#eab308" stroke-width="1.5"/>
-          </g>
           <path d="M48 36 C48 22, 46 10, 48 -14" stroke="#2d7a4f" stroke-width="4" stroke-linecap="round"/>
           <path d="M48 16 C32 14, 22 4, 24 -4 C34 -4, 44 4, 48 16 Z" fill="#4da172"/>
           <path d="M48 8 C64 6, 74 -4, 72 -12 C62 -12, 52 -4, 48 8 Z" fill="#2d7a4f"/>
-          <path d="M48 -4 C36 -12, 32 -24, 38 -30 C46 -26, 50 -14, 48 -4 Z" fill="#74c69d"/>
-          <path d="M48 -10 C58 -18, 64 -28, 58 -34 C50 -30, 46 -18, 48 -10 Z" fill="#4da172"/>
         </g>
-
-        <path d="M174 112 C155 152, 118 166, 98 156" stroke="#d49a1a" stroke-width="2" stroke-dasharray="3 3"/>
       </svg>
 
-      <div>
-        <h3>Visor 3D de la planta</h3>
-        <p>Maqueta interactiva del nodo de riego (listo para reemplazar por modelo <code>.glb</code>).</p>
+      <div class="sensors-strip">
+        <div class="sensor-pill"><span>Sensor 1 (GP26)</span><strong id="valHum1">--%</strong></div>
+        <div class="sensor-pill"><span>Sensor 2 (GP27)</span><strong id="valHum2">--%</strong></div>
       </div>
     </div>
 
     <div class="card gauge-card">
-      <svg width="86" height="86" viewBox="0 0 86 86">
+      <svg width="84" height="84" viewBox="0 0 86 86">
         <circle cx="43" cy="43" r="36" fill="none" stroke="var(--leaf-soft)" stroke-width="9"/>
         <circle id="gaugeArc" cx="43" cy="43" r="36" fill="none" stroke="var(--leaf)" stroke-width="9"
           stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226" transform="rotate(-90 43 43)"/>
-        <text id="gaugeNum" x="43" y="49" text-anchor="middle" font-size="19" font-weight="700" fill="var(--ink)">--</text>
+        <text id="gaugeNum" x="43" y="49" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">--</text>
       </svg>
       <div class="gauge-txt">
-        <h4>Humedad promedio</h4>
-        <div class="big" id="avgLabel">Cargando…</div>
-        <span class="state" id="healthState">Evaluando</span>
+        <h4>Humedad promedio actual</h4>
+        <div class="big" id="avgLabel">--%</div>
+        <span class="state" id="healthState">Sin lectura</span>
       </div>
     </div>
   </section>
 
-  <section style="display:flex; flex-direction:column; gap:20px;">
+  <section style="display:flex; flex-direction:column; gap:18px;">
+    <!-- CONTROLES BIDIRECCIONALES HACIA LA PICO WH -->
     <div class="controls">
       <div class="card ctrl auto-on" id="autoCard">
         <div class="ctrl-top">
-          <h3>🤖 Riego automático</h3>
+          <h3>🤖 Modo Automático</h3>
           <label class="switch"><input type="checkbox" id="autoToggle" checked><span class="slider"></span></label>
         </div>
-        <p class="desc">Activa la bomba cuando la humedad baja del umbral configurado (<strong id="thresholdLabel">35%</strong>).</p>
+        <p class="desc">Riega si baja de <strong id="thresholdLabel">10%</strong> (hasta 60%) y enciende el foco si supera <strong id="maxLabel">80%</strong>.</p>
       </div>
+
       <div class="card ctrl">
-        <div class="ctrl-top"><h3>💧 Riego manual</h3></div>
-        <p class="desc">Envía la orden de riego inmediato a la planta elegida y lo guarda en la bitácora.</p>
-        <select id="plantSelect">
-          <option>Planta Principal</option>
-          <option>Suculenta</option>
-          <option>Helecho</option>
-        </select>
-        <button class="btn btn-primary" id="waterBtn"><span class="spin"></span><span id="waterLabel">Regar ahora</span></button>
+        <div class="ctrl-top"><h3>💧 Bomba de Riego (GP14)</h3></div>
+        <p class="desc">Activa o detiene manualmente la bomba de agua en la Raspberry Pi Pico WH.</p>
+        <button class="btn btn-primary" id="waterBtn">Encender Bomba</button>
       </div>
-      <div class="card ctrl" id="focoCard">
-        <div class="ctrl-top"><h3>💡 Alerta de exceso</h3><span class="bulb" id="bulbIcon">💡</span></div>
-        <p class="desc">Si la humedad supera <strong id="maxLabel">75%</strong>, el indicador avisa exceso de riego.</p>
-        <button class="btn btn-ghost" id="focoBtn">Encender foco</button>
+
+      <div class="card ctrl">
+        <div class="ctrl-top"><h3>💡 Foco de Calor (GP15)</h3><span class="bulb" id="bulbIcon">💡</span></div>
+        <p class="desc">Enciende el foco térmico para evaporar exceso de humedad en el sustrato.</p>
+        <button class="btn btn-ghost" id="focoBtn">Encender Foco</button>
       </div>
     </div>
 
+    <!-- TABLA 1: HISTORIAL DE RIEGO Y HUMEDAD -->
     <div class="card monitor">
       <div class="m-head">
-        <h3>🌿 Bitácora de Humedad y Riego</h3>
-        <button class="btn btn-ghost" id="refreshBtn">↻ Actualizar</button>
+        <h3>🌱 Bitácora de Riego y Bomba (Tabla: registros)</h3>
+        <button class="btn btn-ghost" id="refreshBtn">↻ Sincronizar</button>
       </div>
-      <p class="sub" id="syncSub">Se actualiza automáticamente cada 12 s · datos de demostración</p>
-      <div class="spark" id="spark"></div>
+      <p class="sub">Registra cada activación de bomba y lectura enviada por la Pico WH</p>
 
-      <!-- TABLA CON BORDES Y RAMITAS BOTÁNICAS -->
       <div class="botanical-table-wrap">
-        <!-- Ornamento de hojas esquina superior derecha -->
-        <svg class="vine-corner vine-tr" width="76" height="52" viewBox="0 0 76 52" fill="none">
+        <svg class="vine-corner vine-tr" width="70" height="48" viewBox="0 0 76 52" fill="none">
           <path d="M74 2 C54 4, 38 14, 26 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M56 7 C52 1, 44 2, 44 8 C49 9, 53 8, 56 7 Z" fill="currentColor" fill-opacity="0.35"/>
           <path d="M43 15 C46 21, 53 21, 55 15 C50 14, 46 14, 43 15 Z" fill="currentColor" fill-opacity="0.35"/>
-          <path d="M33 22 C28 17, 21 19, 22 25 C27 25, 30 24, 33 22 Z" fill="currentColor" fill-opacity="0.35"/>
         </svg>
-
-        <!-- Ornamento de hojas esquina inferior izquierda -->
-        <svg class="vine-corner vine-bl" width="76" height="52" viewBox="0 0 76 52" fill="none">
-          <path d="M74 2 C54 4, 38 14, 26 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M56 7 C52 1, 44 2, 44 8 C49 9, 53 8, 56 7 Z" fill="currentColor" fill-opacity="0.35"/>
-          <path d="M43 15 C46 21, 53 21, 55 15 C50 14, 46 14, 43 15 Z" fill="currentColor" fill-opacity="0.35"/>
-          <path d="M33 22 C28 17, 21 19, 22 25 C27 25, 30 24, 33 22 Z" fill="currentColor" fill-opacity="0.35"/>
-        </svg>
-
         <table>
-          <thead>
-            <tr>
-              <th style="width:12%">ID</th>
-              <th style="width:26%">Planta</th>
-              <th style="width:30%">Humedad / Estado</th>
-              <th>Fecha y hora (México)</th>
-            </tr>
-          </thead>
+          <thead><tr><th style="width:12%">ID</th><th style="width:24%">Origen</th><th style="width:34%">Evento / Humedad</th><th>Fecha y hora (México)</th></tr></thead>
         </table>
         <div class="vine-divider"></div>
+        <table><tbody id="rowsRiego"></tbody></table>
+      </div>
+    </div>
+
+    <!-- TABLA 2: HISTORIAL DEL FOCO DE CALOR -->
+    <div class="card monitor">
+      <div class="m-head">
+        <h3>🔥 Bitácora del Foco de Calor (Tabla: registros_foco)</h3>
+      </div>
+      <p class="sub">Historial de encendido y apagado térmico para reducir exceso de humedad</p>
+
+      <div class="botanical-table-wrap">
+        <svg class="vine-corner vine-bl" width="70" height="48" viewBox="0 0 76 52" fill="none">
+          <path d="M74 2 C54 4, 38 14, 26 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M56 7 C52 1, 44 2, 44 8 C49 9, 53 8, 56 7 Z" fill="currentColor" fill-opacity="0.35"/>
+        </svg>
         <table>
-          <tbody id="rows"></tbody>
+          <thead><tr><th style="width:12%">ID</th><th style="width:28%">Estado del Foco</th><th style="width:20%">Humedad</th><th style="width:16%">Modo</th><th>Fecha y hora (México)</th></tr></thead>
         </table>
+        <div class="vine-divider"></div>
+        <table><tbody id="rowsFoco"></tbody></table>
       </div>
     </div>
   </section>
@@ -455,28 +334,26 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
 
 <footer>
   <strong>TESOEM · Ingeniería en Sistemas Computacionales · Grupo 5S2</strong><br>
-  AquaSmart — Sistema de monitoreo y riego automatizado conectado a Aiven MySQL
+  AquaSmart IoT — Control bidireccional Raspberry Pi Pico WH + Render + Aiven MySQL
 </footer>
 
 <div class="overlay" id="overlay">
   <div class="panel">
-    <h3>Conexión con tu servidor (Render / Aiven)</h3>
-    <p class="hint">Pega la URL pública de tu servidor en Render (ej. <code>https://tu-servicio.onrender.com</code>) para leer y guardar los registros reales.</p>
+    <h3>Conexión con Render y Umbrales</h3>
     <div class="field">
-      <label for="apiUrl">URL de la API (Render)</label>
+      <label for="apiUrl">URL de tu servidor en Render</label>
       <input class="api-input" id="apiUrl" placeholder="https://tu-servicio.onrender.com">
     </div>
     <div class="field">
-      <label for="thresholdInput">Umbral de riego automático (%)</label>
-      <input class="api-input" id="thresholdInput" type="number" min="0" max="100" value="35">
+      <label for="thresholdInput">Encender riego automático por debajo de (%)</label>
+      <input class="api-input" id="thresholdInput" type="number" min="0" max="100" value="10">
     </div>
     <div class="field">
-      <label for="maxInput">Humedad máxima antes de encender el foco (%)</label>
-      <input class="api-input" id="maxInput" type="number" min="0" max="100" value="75">
+      <label for="maxInput">Encender foco de calor por encima de (%)</label>
+      <input class="api-input" id="maxInput" type="number" min="0" max="100" value="80">
     </div>
-    <p class="note" id="connNote">Mientras no haya una URL conectada, se mostrarán datos simulados.</p>
     <div class="panel-foot">
-      <button class="btn-text" id="closeSettings">Cancelar</button>
+      <button class="btn btn-ghost" id="closeSettings">Cancelar</button>
       <button class="btn btn-primary" id="saveSettings">Guardar</button>
     </div>
   </div>
@@ -484,28 +361,36 @@ footer{text-align:center; color:var(--muted); font-size:.8rem; padding:10px 20px
 <div class="toast" id="toast"></div>
 
 <script>
-// Pega aquí tu URL exacta de Render (sin diagonal / al final) para conectarse automáticamente
+// ⚠️ PEGA AQUÍ TU URL DE RENDER (sin diagonal / al final)
 const DEFAULT_API_URL = "https://alexcalixto10000-pixel-github-io.onrender.com";
 
-const PLANTS = ["Planta Principal","Suculenta","Helecho"];
-let state = {apiUrl:DEFAULT_API_URL, threshold:35, maxThreshold:75, auto:true, focoOn:false, focoAuto:false, id:1, rows:[]};
-try{
-  const saved = JSON.parse(localStorage.getItem("riego_cfg")||"{}");
-  state.apiUrl = DEFAULT_API_URL || saved.apiUrl || "";
-  state.threshold = saved.threshold||35;
-  state.maxThreshold = saved.maxThreshold||75;
-  state.auto = saved.auto!==false;
-  if(saved.theme) document.documentElement.setAttribute("data-theme", saved.theme);
-}catch(e){}
+let state = {
+  apiUrl: DEFAULT_API_URL,
+  modo_auto: 1,
+  orden_bomba: 0,
+  orden_foco: 0,
+  umbral_min: 10,
+  umbral_max: 80
+};
 
-const $ = s=>document.querySelector(s);
-const rowsEl=$("#rows"), sparkEl=$("#spark");
+try {
+  const saved = JSON.parse(localStorage.getItem("riego_cfg") || "{}");
+  if (DEFAULT_API_URL && !DEFAULT_API_URL.includes("TU-SERVICIO")) {
+    state.apiUrl = DEFAULT_API_URL;
+  } else if (saved.apiUrl) {
+    state.apiUrl = saved.apiUrl;
+  }
+  if (saved.theme) document.documentElement.setAttribute("data-theme", saved.theme);
+} catch (e) {}
 
-function fmtFecha(d){
-  if(!(d instanceof Date) || isNaN(d)) d = new Date();
+const $ = s => document.querySelector(s);
+
+function fmtFecha(fechaStr) {
+  const d = new Date(fechaStr);
+  if (isNaN(d)) return { line: fechaStr || "--", clock: "" };
   const line = d.toLocaleDateString("es-MX", {
     timeZone: "America/Mexico_City",
-    weekday: "long", day: "numeric", month: "long", year: "numeric"
+    weekday: "short", day: "numeric", month: "short", year: "numeric"
   });
   const clock = d.toLocaleTimeString("es-MX", {
     timeZone: "America/Mexico_City",
@@ -514,225 +399,193 @@ function fmtFecha(d){
   return { line: line[0].toUpperCase() + line.slice(1), clock };
 }
 
-function badgeFor(r){
-  if(r.foco) return r.on
-    ? `<span class="badge alert">💡 Foco encendido ${r.auto?"· automático":"· manual"}</span>`
-    : `<span class="badge offbulb">💡 Foco apagado</span>`;
-  if(r.manual) return `<span class="badge manual">💧 ${r.rawText || "Riego manual activado"}</span>`;
-  const cls = r.val<30?"low":r.val<60?"mid":"high";
-  return `<span class="badge ${cls}">💧 Humedad ${r.val}%</span>`;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2400);
 }
 
-function animateWatering(){
-  const stage = $("#viewerStage");
-  stage.classList.add("watering");
-  $("#picoLed").setAttribute("fill", "#38bdf8");
-  setTimeout(()=>{
-    stage.classList.remove("watering");
-    $("#picoLed").setAttribute("fill", state.focoOn ? "#f87171" : "#4ade80");
-  }, 2600);
-}
+function actualizarUIControl(est) {
+  if (!est) return;
+  state.modo_auto = Number(est.modo_auto);
+  state.orden_bomba = Number(est.orden_bomba);
+  state.orden_foco = Number(est.orden_foco);
+  state.umbral_min = Number(est.umbral_min);
+  state.umbral_max = Number(est.umbral_max);
 
-function addReading(plant, manual){
-  const val = manual? null : Math.round(20+Math.random()*78);
-  const f = fmtFecha(new Date());
-  state.rows.unshift({id:state.id++, plant, val, manual, line:f.line, clock:f.clock});
-  state.rows = state.rows.slice(0,40);
-  render();
-  if(manual) animateWatering();
-  else maybeAutoFoco(val);
-}
+  $("#autoToggle").checked = state.modo_auto === 1;
+  $("#autoCard").classList.toggle("auto-on", state.modo_auto === 1);
+  $("#thresholdLabel").textContent = state.umbral_min + "%";
+  $("#maxLabel").textContent = state.umbral_max + "%";
 
-function setFoco(on, auto){
-  state.focoOn = on;
-  $("#bulbIcon").classList.toggle("on", on);
-  $("#picoLed").setAttribute("fill", on ? "#f87171" : "#4ade80");
-  $("#focoBtn").textContent = on? "Apagar foco":"Encender foco";
-  const f = fmtFecha(new Date());
-  state.rows.unshift({id:state.id++, plant:"Sistema 5S2", foco:true, on, auto, line:f.line, clock:f.clock});
-  state.rows = state.rows.slice(0,40);
-  render();
-  if(state.apiUrl){
-    pushToApi("Sistema 5S2", on ? "Foco alerta encendido" : "Foco alerta apagado");
+  const bombaActiva = state.orden_bomba === 1 || Number(est.bomba_real) === 1;
+  const focoActivo = state.orden_foco === 1 || Number(est.foco_real) === 1;
+
+  // Botón bomba
+  const wBtn = $("#waterBtn");
+  wBtn.textContent = bombaActiva ? "Detener Bomba" : "Encender Bomba";
+  wBtn.className = bombaActiva ? "btn btn-danger" : "btn btn-primary";
+  $("#viewerStage").classList.toggle("watering", bombaActiva);
+
+  // Botón foco
+  const fBtn = $("#focoBtn");
+  fBtn.textContent = focoActivo ? "Apagar Foco" : "Encender Foco";
+  fBtn.className = focoActivo ? "btn btn-amber" : "btn btn-ghost";
+  $("#bulbIcon").classList.toggle("on", focoActivo);
+  $("#picoLed").setAttribute("fill", focoActivo ? "#f87171" : (bombaActiva ? "#38bdf8" : "#4ade80"));
+
+  // Etiqueta hardware
+  $("#hwStateBadge").textContent = bombaActiva ? "Bomba ON" : (focoActivo ? "Foco Calor ON" : "Monitoreando");
+
+  // Sensores S1 y S2
+  const h1 = Number(est.hum1 || 0);
+  const h2 = Number(est.hum2 || 0);
+  const prom = Math.round((h1 + h2) / 2);
+  $("#valHum1").textContent = h1.toFixed(1) + "%";
+  $("#valHum2").textContent = h2.toFixed(1) + "%";
+  $("#avgLabel").textContent = prom + "%";
+  $("#gaugeNum").textContent = prom + "%";
+
+  const off = 226 - (226 * prom / 100);
+  $("#gaugeArc").setAttribute("stroke-dashoffset", off);
+  const hs = $("#healthState");
+  if (prom <= state.umbral_min) {
+    hs.textContent = "Sustrato seco · Requiere riego";
+    hs.style.background = "var(--red-soft)"; hs.style.color = "var(--red)";
+  } else if (prom > state.umbral_max) {
+    hs.textContent = "Exceso de humedad · Foco activo";
+    hs.style.background = "var(--amber-soft)"; hs.style.color = "var(--amber)";
+  } else {
+    hs.textContent = "Humedad óptima";
+    hs.style.background = "var(--leaf-soft)"; hs.style.color = "var(--leaf-deep)";
   }
 }
 
-function maybeAutoFoco(val){
-  if(typeof val !== "number") return;
-  if(val > state.maxThreshold && !state.focoOn){ state.focoAuto = true; setFoco(true, true); }
-  else if(val <= state.maxThreshold - 5 && state.focoOn && state.focoAuto){ state.focoAuto = false; setFoco(false, true); }
-}
+async function sincronizarTodo() {
+  const base = state.apiUrl.replace(/\/$/, "");
+  if (!base || base.includes("TU-SERVICIO")) {
+    $("#statusDot").className = "dot off";
+    $("#statusTxt").textContent = "Configura tu URL en ⚙️";
+    return;
+  }
 
-function render(){
-  rowsEl.innerHTML = state.rows.slice(0,25).map(r=>`
-    <tr>
-      <td style="width:12%"><strong>#${r.id}</strong></td>
-      <td style="width:26%" class="plant-cell">${r.foco?"💡":"🌱"} ${r.plant}</td>
-      <td style="width:30%">${badgeFor(r)}</td>
-      <td class="when">${r.line}<div class="clock">🕒 ${r.clock}</div></td>
-    </tr>`).join("");
+  try {
+    const [resDatos, resFoco, resEstado] = await Promise.all([
+      fetch(base + "/datos"),
+      fetch(base + "/foco"),
+      fetch(base + "/estado")
+    ]);
 
-  const numericRows = state.rows.filter(r=>!r.manual && !r.foco && typeof r.val === "number");
-  const recent = numericRows.slice(0,10).reverse();
-  sparkEl.innerHTML = recent.map(r=>`<i style="height:${Math.max(6,r.val)}%"></i>`).join("")
-    || "<i style='height:5%'></i>";
+    if (!resDatos.ok || !resFoco.ok || !resEstado.ok) throw new Error("Error HTTP");
 
-  const vals = numericRows.slice(0,8).map(r=>r.val);
-  if(vals.length){
-    const avg = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
-    $("#avgLabel").textContent = avg+"%";
-    $("#gaugeNum").textContent = avg+"%";
-    const off = 226 - (226*avg/100);
-    $("#gaugeArc").setAttribute("stroke-dashoffset", off);
-    $("#gaugeArc").setAttribute("stroke", avg<30?"var(--red)":avg<60?"var(--amber)":"var(--leaf)");
-    const hs=$("#healthState");
-    if(avg<30){hs.textContent="Necesita agua"; hs.style.background="var(--red-soft)"; hs.style.color="var(--red)";}
-    else if(avg<60){hs.textContent="Vigilar"; hs.style.background="var(--amber-soft)"; hs.style.color="var(--amber)";}
-    else {hs.textContent="Saludable"; hs.style.background="var(--leaf-soft)"; hs.style.color="var(--leaf-deep)";}
+    const datos = await resDatos.json();
+    const focos = await resFoco.json();
+    const estado = await resEstado.json();
+
+    $("#statusDot").className = "dot ok";
+    $("#statusTxt").textContent = "En línea · Aiven + Pico WH";
+
+    actualizarUIControl(estado);
+
+    // Pintar Tabla 1 (Riego)
+    $("#rowsRiego").innerHTML = datos.length ? datos.map(r => {
+      const f = fmtFecha(r.fecha);
+      return `<tr>
+        <td style="width:12%"><strong>#${r.id}</strong></td>
+        <td style="width:24%">🌿 ${r.nombre}</td>
+        <td style="width:34%"><span class="badge sky">💧 ${r.valor}</span></td>
+        <td class="when">${f.line}<div class="clock">🕒 ${f.clock}</div></td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="4" style="text-align:center;color:var(--muted)">Sin registros de riego aún.</td></tr>`;
+
+    // Pintar Tabla 2 (Foco de Calor)
+    $("#rowsFoco").innerHTML = focos.length ? focos.map(r => {
+      const f = fmtFecha(r.fecha);
+      const encendido = /ENCENDIDO/i.test(r.evento);
+      return `<tr>
+        <td style="width:12%"><strong>#${r.id}</strong></td>
+        <td style="width:28%"><span class="badge ${encendido ? 'amber' : 'leaf'}">💡 ${r.evento}</span></td>
+        <td style="width:20%">${r.humedad}</td>
+        <td style="width:16%">${r.modo}</td>
+        <td class="when">${f.line}<div class="clock">🕒 ${f.clock}</div></td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="5" style="text-align:center;color:var(--muted)">Sin registros del foco de calor aún.</td></tr>`;
+
+  } catch (e) {
+    $("#statusDot").className = "dot off";
+    $("#statusTxt").textContent = "Despertando Render...";
   }
 }
 
-function setStatus(){
-  const connected = !!state.apiUrl;
-  $("#statusDot").className = "dot "+(connected?"ok":"");
-  $("#statusTxt").textContent = connected? "Conectado · Aiven" : "Modo demostración";
-  $("#syncSub").textContent = "Se actualiza automáticamente cada 12 s · "+(connected? "sincronizado con Render / Aiven" : "datos de demostración");
-}
-
-async function pullFromApi(){
-  if(!state.apiUrl) return false;
-  try{
-    const base = state.apiUrl.replace(/\/$/,"");
-    const res = await fetch(base+"/datos", {signal: AbortSignal.timeout(8000)});
-    if(!res.ok) throw new Error("bad response");
-    const data = await res.json();
-    if(!Array.isArray(data)) return false;
-
-    const ordenados = [...data].sort((a,b)=>b.id - a.id);
-    state.rows = ordenados.map(item => {
-      const f = fmtFecha(new Date(item.fecha));
-      const numMatch = String(item.valor).match(/(\d+(\.\d+)?)/);
-      const isFoco = /foco/i.test(item.valor);
-      const isManual = /manual/i.test(item.valor) || (!numMatch && !isFoco);
-      return {
-        id: item.id,
-        plant: item.nombre,
-        val: numMatch ? Math.round(Number(numMatch[1])) : null,
-        manual: isManual,
-        rawText: item.valor,
-        foco: isFoco,
-        on: /encendido/i.test(item.valor),
-        line: f.line,
-        clock: f.clock
-      };
-    });
-    render();
-    if(state.rows.length && typeof state.rows[0].val === "number") maybeAutoFoco(state.rows[0].val);
-    return true;
-  }catch(e){ return false; }
-}
-
-async function pushToApi(nombre, valor){
-  if(!state.apiUrl) return;
-  try{
-    const base = state.apiUrl.replace(/\/$/,"");
-    await fetch(base+"/guardar", {
+async function enviarOrden(payload, mensajeToast) {
+  const base = state.apiUrl.replace(/\/$/, "");
+  try {
+    const res = await fetch(base + "/control", {
       method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({nombre, valor})
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
-    await pullFromApi();
-  }catch(e){ console.error(e); }
-}
-
-async function tick(){
-  if(state.apiUrl){
-    const ok = await pullFromApi();
-    $("#statusDot").className = "dot "+(ok?"ok":"off");
-    $("#statusTxt").textContent = ok? "Conectado · Aiven" : "Despertando Render...";
-  } else {
-    addReading(PLANTS[Math.floor(Math.random()*PLANTS.length)], false);
+    if (res.ok) {
+      const nuevo = await res.json();
+      actualizarUIControl(nuevo);
+      toast(mensajeToast);
+      sincronizarTodo();
+    }
+  } catch (e) {
+    toast("Error al enviar señal al servidor");
   }
 }
 
-function toast(msg){
-  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 2200);
-}
+// Eventos de botones
+$("#autoToggle").onchange = e => {
+  const val = e.target.checked ? 1 : 0;
+  enviarOrden({ modo_auto: val }, val ? "Modo automático ACTIVADO" : "Modo manual ACTIVADO");
+};
 
-// Inicialización
-if(state.apiUrl){
-  setStatus();
-  tick();
-} else {
-  for(let i=0;i<5;i++) addReading(PLANTS[i%3], false);
-  setStatus(); render();
-}
-setInterval(tick, 12000);
+$("#waterBtn").onclick = () => {
+  const nuevaOrden = state.orden_bomba === 1 ? 0 : 1;
+  enviarOrden({ orden_bomba: nuevaOrden }, nuevaOrden ? "Orden enviada: Encender bomba" : "Orden enviada: Apagar bomba");
+};
 
-$("#refreshBtn").onclick = ()=>{ tick(); toast("Lecturas actualizadas"); };
+$("#focoBtn").onclick = () => {
+  const nuevaOrden = state.orden_foco === 1 ? 0 : 1;
+  enviarOrden({ orden_foco: nuevaOrden }, nuevaOrden ? "Orden enviada: Encender foco" : "Orden enviada: Apagar foco");
+};
 
-$("#themeBtn").onclick = ()=>{
-  const cur = document.documentElement.getAttribute("data-theme");
-  const next = cur === "dark" ? "light" : "dark";
+$("#refreshBtn").onclick = () => {
+  sincronizarTodo();
+  toast("Sincronizando con Aiven...");
+};
+
+$("#themeBtn").onclick = () => {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", next);
-  persist(next);
+  localStorage.setItem("riego_cfg", JSON.stringify({ apiUrl: state.apiUrl, theme: next }));
 };
 
-$("#autoToggle").onchange = e=>{
-  state.auto = e.target.checked;
-  $("#autoCard").classList.toggle("auto-on", state.auto);
-  toast(state.auto? "Riego automático activado":"Riego automático desactivado");
-  persist();
-};
-
-$("#waterBtn").onclick = async ()=>{
-  const btn=$("#waterBtn"), label=$("#waterLabel");
-  const planta = $("#plantSelect").value;
-  btn.classList.add("loading"); btn.disabled=true; label.textContent="Enviando orden…";
-  animateWatering();
-
-  if(state.apiUrl){
-    await pushToApi(planta, "Riego manual activado");
-  } else {
-    addReading(planta, true);
-  }
-
-  btn.classList.remove("loading"); btn.disabled=false; label.textContent="Regar ahora";
-  toast("Riego manual enviado a "+planta);
-};
-
-$("#openSettings").onclick = ()=>{
-  $("#apiUrl").value = state.apiUrl; $("#thresholdInput").value = state.threshold; $("#maxInput").value = state.maxThreshold;
+$("#openSettings").onclick = () => {
+  $("#apiUrl").value = state.apiUrl;
+  $("#thresholdInput").value = state.umbral_min;
+  $("#maxInput").value = state.umbral_max;
   $("#overlay").classList.add("show");
 };
-$("#closeSettings").onclick = ()=> $("#overlay").classList.remove("show");
-$("#saveSettings").onclick = ()=>{
+$("#closeSettings").onclick = () => $("#overlay").classList.remove("show");
+$("#saveSettings").onclick = () => {
   state.apiUrl = $("#apiUrl").value.trim();
-  state.threshold = Number($("#thresholdInput").value)||35;
-  state.maxThreshold = Number($("#maxInput").value)||75;
-  $("#thresholdLabel").textContent = state.threshold+"%";
-  $("#maxLabel").textContent = state.maxThreshold+"%";
-  persist(); setStatus();
+  const uMin = Number($("#thresholdInput").value) || 10;
+  const uMax = Number($("#maxInput").value) || 80;
+  localStorage.setItem("riego_cfg", JSON.stringify({
+    apiUrl: state.apiUrl,
+    theme: document.documentElement.getAttribute("data-theme") || "light"
+  }));
   $("#overlay").classList.remove("show");
-  toast("Configuración guardada");
-  if(state.apiUrl) tick();
+  enviarOrden({ umbral_min: uMin, umbral_max: uMax }, "Configuración guardada");
 };
-$("#focoBtn").onclick = ()=>{
-  state.focoAuto = false;
-  setFoco(!state.focoOn, false);
-  toast(state.focoOn? "Foco encendido manualmente":"Foco apagado manualmente");
-};
-function persist(themeOverride){
-  try{
-    const theme = themeOverride || document.documentElement.getAttribute("data-theme") || "";
-    localStorage.setItem("riego_cfg", JSON.stringify({apiUrl:state.apiUrl, threshold:state.threshold, maxThreshold:state.maxThreshold, auto:state.auto, theme}));
-  }catch(e){}
-}
-$("#thresholdLabel").textContent = state.threshold+"%";
-$("#maxLabel").textContent = state.maxThreshold+"%";
-$("#autoToggle").checked = state.auto;
-$("#autoCard").classList.toggle("auto-on", state.auto);
+
+// Iniciar sincronización automática cada 5 segundos
+sincronizarTodo();
+setInterval(sincronizarTodo, 5000);
 </script>
 </body>
 </html>
